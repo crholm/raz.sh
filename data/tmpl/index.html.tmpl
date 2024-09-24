@@ -9,11 +9,16 @@
 
 
 
-<div class="title">Raz Blog</div>
 
+<div class="title">Raz Blog</div>
 <div class="content">
-    <h1>{{.Title}}</h1>
-    {{.Body}}
+
+    {{ range .Items}}
+
+        <ul style="font-size: 1.5rem">
+            <li><a href="/blog/{{.Slug}}">{{toDate .PublishDate}} - {{.Title}}</a></li>
+        </ul>
+    {{end}}
 </div>
 
 

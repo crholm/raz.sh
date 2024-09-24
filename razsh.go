@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/russross/blackfriday/v2"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/acme/autocert"
 	"gopkg.in/yaml.v3"
@@ -62,6 +63,13 @@ func check(err error) {
 	}
 }
 
+type FileHeader struct {
+	Title       string    `yaml:"title"`
+	Slug        string    `yaml:"slug"`
+	PublishDate time.Time `yaml:"publish_date"`
+	Public      bool      `yaml:"public"`
+}
+
 func serve(c *cli.Context) error {
 
 	dataDir := c.String("data-dir")
@@ -74,6 +82,8 @@ func serve(c *cli.Context) error {
 	r.Use(middleware.Logger)
 	r.Get("/", renderIndex(dataDir))
 	r.Get("/blog/{entry}", renderEntry(dataDir))
+	r.Get("/blog/media/{file}", assets(filepath.Join(dataDir, "blog", "media")))
+	r.Get("/assets/{file}", assets(filepath.Join(dataDir, "assets")))
 
 	server := &http.Server{
 		Addr:    c.String("http-interface"),
@@ -100,6 +110,32 @@ func serve(c *cli.Context) error {
 
 	server.Handler = r
 	return server.ListenAndServe()
+}
+
+func assets(dir string) http.HandlerFunc {
+
+	return func(writer http.ResponseWriter, request *http.Request) {
+		item := chi.URLParam(request, "file")
+
+		file, err := filepath.Abs(filepath.Join(dir, item))
+		if err != nil {
+			log.Println(err)
+			http.NotFound(writer, request)
+			return
+		}
+		base, err := filepath.Abs(dir)
+		if err != nil {
+			log.Println(err)
+			http.NotFound(writer, request)
+			return
+		}
+		if !strings.HasPrefix(file, base) {
+			http.Error(writer, "Forbidden", http.StatusForbidden)
+			return
+		}
+
+		http.ServeFile(writer, request, filepath.Join(dir, item))
+	}
 }
 
 func renderEntry(dir string) http.HandlerFunc {
@@ -156,12 +192,15 @@ func renderEntry(dir string) http.HandlerFunc {
 			http.Error(writer, "Forbidden", http.StatusForbidden)
 			return
 		}
+
+		htmlBody := blackfriday.Run(bodyBytes)
+
 		err = tmpl.Execute(writer, struct {
 			FileHeader
 			Body string
 		}{
 			FileHeader: header,
-			Body:       string(bodyBytes),
+			Body:       string(htmlBody),
 		},
 		)
 
@@ -174,15 +213,84 @@ func renderEntry(dir string) http.HandlerFunc {
 	}
 }
 
-func renderIndex(dir string) http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-
+func readHeader(file string) (FileHeader, error) {
+	data, err := os.ReadFile(file)
+	if err != nil {
+		return FileHeader{}, err
+	}
+	data = bytes.TrimLeft(data, "\t\n\r- ")
+	headerBytes, _, found := bytes.Cut(data, []byte("---\n"))
+	if !found {
+		return FileHeader{}, fmt.Errorf("could not find header")
 	}
 
+	header := FileHeader{}
+	err = yaml.Unmarshal(headerBytes, &header)
+	if err != nil {
+		return FileHeader{}, err
+	}
+
+	return header, nil
 }
 
-type FileHeader struct {
-	Title       string    `yaml:"title"`
-	PublishDate time.Time `yaml:"publish_date"`
-	Public      bool      `yaml:"public"`
+func renderIndex(dir string) http.HandlerFunc {
+
+	tmpl := template.New("index.html.tmpl").Funcs(template.FuncMap{
+		"toDate": func(t any) string {
+			tt, ok := t.(time.Time)
+			if !ok {
+				return ""
+			}
+			return tt.Format("2006-01-02")
+		},
+	})
+
+	tmpl, err := tmpl.ParseFiles(filepath.Join(dir, "tmpl", "index.html.tmpl"))
+	if err != nil {
+		log.Fatal(fmt.Errorf("file %s must exist, %w", filepath.Join(dir, "tmpl", "index.html.tmpl"), err))
+	}
+
+	dir = filepath.Join(dir, "blog")
+
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		var mdFiles []string
+
+		entries, err := os.ReadDir(dir)
+		if err != nil {
+			log.Println(err)
+			http.Error(writer, "could not read dir", http.StatusInternalServerError)
+			return
+		}
+
+		for _, entry := range entries {
+			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".md") {
+				mdFiles = append(mdFiles, filepath.Join(dir, entry.Name()))
+			}
+		}
+		var headers []FileHeader
+		for _, file := range mdFiles {
+			h, err := readHeader(file)
+			if err != nil {
+				log.Println("could not read header for ", file, " ", err)
+				continue
+			}
+			if !h.Public {
+				continue
+			}
+			h.Slug = strings.TrimSuffix(filepath.Base(file), ".md")
+			headers = append(headers, h)
+		}
+
+		err = tmpl.Execute(writer, struct {
+			Title string
+			Slug  string
+			Items []FileHeader
+		}{Title: "Raz Blog", Items: headers})
+
+		if err != nil {
+			log.Println("could not render template ", err)
+		}
+	}
+
 }

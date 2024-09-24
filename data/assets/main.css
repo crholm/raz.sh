@@ -1,0 +1,115 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fffcf2;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-size: 1.2rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 20px 0 10px;
+    padding: 10px;
+    color: #5d9f5b;
+    border:  2px black solid;
+    box-shadow: 4px 4px black;
+    background: white;
+}
+
+p {
+    margin: 10px 0;
+    color: #323232;
+}
+
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title{
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    color: #5d9f5b;
+    border:  3px black solid;
+    box-shadow: 10px 10px black;
+    font-size: 3rem;
+    background: white;
+    font-weight: bold;
+}
+
+/* Neobrutalism Styles */
+a {
+    color: #ff8e84;
+    text-decoration: none;
+    border-bottom: 2px solid #ff8e84;
+}
+
+a:hover {
+    background-color: #5d9f5b;
+    border-bottom: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+code {
+    font-size: 1.1rem;
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border: 1px solid black;
+    box-shadow: 3px 3px black;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #e1e1e1;
+    overflow-x: auto;
+    box-shadow: 2px 2px black;
+}
+
+blockquote {
+    border-left: 5px solid #ff8e84;
+    padding-left: 10px;
+    margin: 10px 0;
+    background-color: #f4f4f4;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+ul, ol {
+    margin: 10px 0;
+    padding-left: 20px;
+    color: #666666;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 3px solid #ff8e84;
+    box-shadow: 5px 5px black;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    border: 2px solid #ff8e84;
+    padding: 10px;
+    text-align: left;
+    background-color: #f9f9f9;
+}
+
+hr {
+    border: 0;
+    height: 2px;
+    background: #ff8e84;
+    margin: 20px 0;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
