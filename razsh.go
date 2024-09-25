@@ -42,6 +42,9 @@ func main() {
 					&cli.StringSliceFlag{
 						Name: "hostname",
 					},
+					&cli.BoolFlag{
+						Name: "verbose",
+					},
 					&cli.StringFlag{
 						Name:  "data-dir",
 						Value: "./data",
@@ -85,11 +88,21 @@ func serve(c *cli.Context) error {
 	r.Get("/blog/media/{file}", assets(filepath.Join(dataDir, "blog", "media")))
 	r.Get("/assets/{file}", assets(filepath.Join(dataDir, "assets")))
 
-	server := &http.Server{
-		Addr:    c.String("http-interface"),
-		Handler: r,
+	if !c.Bool("tls") {
+		server := &http.Server{
+			Addr:    c.String("http-interface"),
+			Handler: r,
+		}
+
+		fmt.Println("Starting http server")
+		if c.Bool("verbose") {
+			server.ErrorLog = log.New(os.Stderr, "http: ", log.LstdFlags)
+		}
+		return server.ListenAndServe()
 	}
+
 	if c.Bool("tls") {
+		fmt.Println("Setting tls @", c.String("https-interface"), "for", c.String("hostname"))
 
 		if c.String("hostname") == "" {
 			log.Fatal("hostname is required")
@@ -100,16 +113,27 @@ func serve(c *cli.Context) error {
 			HostPolicy: autocert.HostWhitelist(c.StringSlice("hostname")...),
 			Cache:      autocert.DirCache(filepath.Join(c.String("data-dir"), "acme")),
 		}
+		go func() {
+			fmt.Println("Starting http server for redirect")
+			http.ListenAndServe(":80", certManager.HTTPHandler(nil))
+		}()
 
-		server.Addr = c.String("https-interface")
-		server.TLSConfig = &tls.Config{
-			GetCertificate: certManager.GetCertificate,
-			MinVersion:     tls.VersionTLS12, // improves cert reputation score at https://www.ssllabs.com/ssltest/
+		server := &http.Server{
+			Addr:    c.String("https-interface"),
+			Handler: r,
+			TLSConfig: &tls.Config{
+				GetCertificate: certManager.GetCertificate,
+				MinVersion:     tls.VersionTLS12,
+			},
 		}
-	}
 
-	server.Handler = r
-	return server.ListenAndServe()
+		fmt.Println("Starting https server")
+		if c.Bool("verbose") {
+			server.ErrorLog = log.New(os.Stderr, "[https] ", log.LstdFlags)
+		}
+		return server.ListenAndServeTLS("", "")
+	}
+	return nil
 }
 
 func assets(dir string) http.HandlerFunc {

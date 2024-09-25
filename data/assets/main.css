@@ -11,12 +11,48 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
-    margin: 20px 0 10px;
+    margin: 1rem 0 0.5rem;
     padding: 10px;
     color: #5d9f5b;
     border:  2px black solid;
     box-shadow: 4px 4px black;
     background: white;
+}
+
+h1{
+    margin-top: 3rem;
+
+}
+h1:before{
+    content: "> ";
+    display: inline-block;
+    font-family: monospace;
+    white-space: pre;
+}
+h2:before{
+    content: "-> ";
+    display: inline-block;
+    font-family: monospace;
+    white-space: pre;
+}
+h3:before{
+    content: "--> ";
+    display: inline-block;
+    font-family: monospace;
+    white-space: pre;
+}
+h4:before{
+    content: "---> ";
+    display: inline-block;
+    font-family: monospace;
+    white-space: pre;
+}
+
+h2{
+    margin-top: 2.5rem;
+}
+h3{
+    margin-top: 1.5rem;
 }
 
 p {
@@ -44,9 +80,9 @@ p {
 
 /* Neobrutalism Styles */
 a {
-    color: #ff8e84;
+    color: #ff0000;
     text-decoration: none;
-    border-bottom: 2px solid #ff8e84;
+    border-bottom: 2px solid #ff0000;
 }
 
 a:hover {
@@ -61,6 +97,12 @@ code {
     padding: 2px 4px;
     border: 1px solid black;
     box-shadow: 3px 3px black;
+    white-space: pre;
+}
+
+pre code{
+    border: none;
+    box-shadow: none;
 }
 
 pre {
@@ -68,15 +110,16 @@ pre {
     padding: 10px;
     border: 1px solid #e1e1e1;
     overflow-x: auto;
-    box-shadow: 2px 2px black;
+    ox-shadow: 5px 5px black;
 }
 
 blockquote {
-    border-left: 5px solid #ff8e84;
-    padding-left: 10px;
-    margin: 10px 0;
-    background-color: #f4f4f4;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+
+    padding: 0.1rem 1rem;
+    margin: 1rem 0;
+    border-left: 1rem solid #ff0000;
+    background-color: #cacaca;
+    box-shadow: 4px 4px black;
 }
 
 ul, ol {
@@ -88,7 +131,7 @@ ul, ol {
 img {
     max-width: 100%;
     height: auto;
-    border: 3px solid #ff8e84;
+    border: 2px solid #ff0000;
     box-shadow: 5px 5px black;
 }
 
@@ -100,7 +143,7 @@ table {
 }
 
 th, td {
-    border: 2px solid #ff8e84;
+    border: 2px solid #ff0000;
     padding: 10px;
     text-align: left;
     background-color: #f9f9f9;
@@ -108,8 +151,8 @@ th, td {
 
 hr {
     border: 0;
-    height: 2px;
-    background: #ff8e84;
+    height: 7px;
+    background: #ff0000;
     margin: 20px 0;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 3px black;
 }
