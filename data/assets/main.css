@@ -30,19 +30,25 @@ h1:before{
     white-space: pre;
 }
 h2:before{
-    content: "-> ";
+    content: "# ";
     display: inline-block;
     font-family: monospace;
     white-space: pre;
 }
 h3:before{
-    content: "--> ";
+    content: "## ";
     display: inline-block;
     font-family: monospace;
     white-space: pre;
 }
 h4:before{
-    content: "---> ";
+    content: "### ";
+    display: inline-block;
+    font-family: monospace;
+    white-space: pre;
+}
+h5:before{
+    content: "#### ";
     display: inline-block;
     font-family: monospace;
     white-space: pre;
@@ -64,6 +70,11 @@ p {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+}
+
+.title a {
+    color: #5d9f5b;
+    border-bottom: 2px solid #5d9f5b;
 }
 
 .title{
@@ -156,3 +167,13 @@ hr {
     margin: 20px 0;
     box-shadow: 3px 3px black;
 }
+
+nav > ul > li > ul > li > ul{
+    display: none;
+}
+nav > ul{
+    list-style: none;
+}
+/*nav ul li ul li {*/
+/*    display: none;*/
+/*}*/
