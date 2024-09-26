@@ -108,7 +108,7 @@ code {
     padding: 2px 4px;
     border: 1px solid black;
     box-shadow: 3px 3px black;
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 pre code{
