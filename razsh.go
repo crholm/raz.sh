@@ -188,11 +188,11 @@ func renderEntry(dir, ga string) http.HandlerFunc {
 		if err := tmpl.Execute(w, struct {
 			FileHeader
 			Body template.HTML
-			GA   template.JS
+			GA   template.HTML
 		}{
 			FileHeader: header,
 			Body:       template.HTML(htmlBody),
-			GA:         template.JS(ga),
+			GA:         template.HTML(ga),
 		}); err != nil {
 			log.Printf("Error rendering entry template: %v", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -220,8 +220,8 @@ func renderIndex(dir, ga string) http.HandlerFunc {
 
 		if err := tmpl.Execute(w, struct {
 			Items []FileHeader
-			GA    string
-		}{Items: entries, GA: ga}); err != nil {
+			GA    template.HTML
+		}{Items: entries, GA: template.HTML(ga)}); err != nil {
 			log.Printf("Error rendering index template: %v", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
