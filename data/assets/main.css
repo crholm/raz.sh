@@ -77,16 +77,38 @@ p {
     border-bottom: 2px solid #5d9f5b;
 }
 
-.title{
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
-    color: #5d9f5b;
     border:  3px black solid;
     box-shadow: 10px 10px black;
-    font-size: 3rem;
     background: white;
+}
+.title{
+    color: #5d9f5b;
+    font-size: 3rem;
     font-weight: bold;
+}
+
+
+.social{
+}
+.social a{
+    border: none;
+}
+.social a:hover{
+    border: none;
+    background: none;
+}
+.social img{
+    height: 25px;
+    border: none;
+    margin: 0;
+    box-shadow: none;
 }
 
 /* Neobrutalism Styles */
