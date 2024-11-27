@@ -246,3 +246,13 @@ cat 202410._domainkey.raz.sh.txt
 v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwvaKRca/zMD2eK+5RFDY2ZVjCeGB8P/HcLktXHBunkNf87wfg3NA2c3ohHunUygYdCsOG5j/dmHEza75hBS+agPVn+YnG2Je6EomWbCw62jsxWyOZTKtrf/VnzTKdGsPN1PJGJLJzt1EhGZE6fDdXLQ9EnLUwloIQCM7wR0afvdB5PUhZvKIZMlM9HToIk3t73ivhITVnjF4FoeMXuY+4AsjYhdKnA9Lxto3mccqCb9DW44RgGQOhPLATFYKeIvtkuhfWdaKoNASkoM067oLst+7fKl6VU/9pXmwMDv0lQgakEPiWAbjPlO5n3d1YLSVjYu/WDH1VaG33RrRGJMdwQIDAQAB
 
 ```
+
+### DMARC
+
+For DMARC we need to publish a DNS TXT record with the policy.
+
+it should look like the following
+```bash
+dig txt _dmarc.raz.sh
+_dmarc.raz.sh.       60      IN      TXT     "v=DMARC1; p=quarantine; sp=quarantine; rua=mailto:shrubs-ebony-jeep@duck.com"
+```

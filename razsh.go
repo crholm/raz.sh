@@ -23,10 +23,16 @@ func main() {
 				Name: "serve",
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "tls"},
-					&cli.StringFlag{Name: "data-dir", Value: "./data"},
 					&cli.StringSliceFlag{Name: "hostname"},
+					&cli.StringFlag{Name: "data-dir", Value: "./data"},
+
 					&cli.StringFlag{Name: "http-interface", Value: ":80"},
 					&cli.StringFlag{Name: "https-interface", Value: ":443"},
+
+					&cli.StringFlag{Name: "smtp-interface", Value: ":25"},
+					&cli.StringFlag{Name: "smtp-publish-to-address", Usage: "the email address that will receive email an publish it, eg. publish@blog.example.com"},
+					&cli.StringFlag{Name: "smtp-publish-from-address", Usage: "the email address that will send an email to publish it, eg. my-addess@gmail.comgit"},
+
 					&cli.StringFlag{Name: "ga"},
 				},
 				Action: serve,
