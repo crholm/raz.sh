@@ -117,6 +117,10 @@ regarding passwords to do better. I think that companies that weaponize SSO in t
 out. It makes for a shitty experience, us all less secure and purchasing experience leaving feeling taken advantage of
 
 
+> _edit:_ \
+> A reader informed me of a already compiled list of offenders [sso.tax](https://sso.tax/) 
+
+
 - **GitHub** \
   Enterprise accounts only, `5.25x` the price of a regular team account, or an extra `$17/user/month` for Enterprise\
 
