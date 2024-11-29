@@ -47,7 +47,7 @@ looking for.
 During the last 5 years, a lot of new regulations coming online, in particular from the EU.
 This includes regulation such as NIS, NIS2 and DORA (and I'm sure there are more that cover its security.)
 
-Most of them boil down to that regulated organizations should have control over their IT security and their vendors**
+Most of them boil down to that regulated organizations should have control over their IT security and their vendors
 should as well. Not a bad thing in and of itself, but EU being EU combines the regulations with hefty fines for things
 that someone somewhere at some point may consider non-compliance.
 
@@ -68,7 +68,7 @@ There are many ways of pricing a product, but two of the most common once on the
 cost-based strategy.
 
 _Examples of a value-based pricing model_ are Slack, Intercom and more. A sign of such a price strategy is that you are
-charged by the seat per month and that there is no clear reason for the single to drive such cost.
+charged by the seat per month and that there is no clear reason that a user would drive cost.
 
 _Examples of a cost-based pricing model_ are Digital Ocean, Sendgrid, AWS and more. A sign indication of such a price
 strategy is that you are charged by what you use with a markup. You pay for a VPS at Digital Ocean, and you are charged
@@ -79,7 +79,8 @@ This makes sense, it's straightforward to implement, it drives no extra cost, an
 (handling password is not something you should do if you can avoid it)
 
 However, looking at value-based offerings, we often see that you need to buy the premium tier to get access to SSO in
-the service. Tiered pricing is more common than not, and when we are looking at the purge of a value-based pricing
+the service.
+Tiered pricing is more common than not, and when you squint your eyes looking at it as part of a value-based pricing
 strategy, it might make sense. But it does not.
 
 Not that long ago, https and (at that time named) SSL were not that common on the internet. People wanting to provide a
@@ -118,7 +119,9 @@ out. It makes for a shitty experience, us all less secure and purchasing experie
 
 
 > _edit:_ \
-> A reader informed me of a already compiled list of offenders [sso.tax](https://sso.tax/) 
+> A reader informed me of already compiled lists of offenders \
+> - [ssotax.org/](https://ssotax.org/) \
+> - [sso.tax](https://sso.tax/) 
 
 
 - **GitHub** \
