@@ -20,16 +20,18 @@ let us standardize on api for LLM/Agents to interact with the world,
 and how to inform the LLM/Agent about it.
 
 Things are moving really fast
-and Google recently released their orthogonal standard
+and Google recently released their own, as they claim, orthogonal standard
 called [Agent2Agent](https://google.github.io/A2A).
 MCP Server are being build ant published daily,
 and can be found at eg [mcp.so](https://mcp.so/) and [pulsemcp.com](https://www.pulsemcp.com/).
 
 However, I'm astonished by the apparent lack of grownups in the room.
 All the major players spend billions of dollars on training and tuning their models,
-just to turn around and, from what i can tell, have an intern write the documentation,
+just to turn around and, from what I can tell, have an intern write the documentation,
 providing bad sdks and on and on.
-This seems to have continued when it comes to MCP and some very strange design decisions.
+
+This seems to have continued when it comes to MCP and some very strange design decisions,
+poor documentation and even wors specification the actual protocols.
 
 # Background
 
@@ -64,20 +66,22 @@ As all with cool applications, post 2005, they’re local first (_\*irony\*_), a
 very
 much the case of MCP. Looking at the transport protocol you kind of get where there comming from, if
 their intention is to build out LLM tools for coding on your laptop. You probably are looking at the
-local IDEA,(or let's be real, Cursor or Windsurf)and how to have the LLM interact with the local
-file system, your databases, your editor and so on
+local IDEA (or let's be real, Cursor or Windsurf) and how to have the LLM interact with the local
+file system, your databases, your editor, your language server and so on
 
-There are essentially two main transport protocols (or three if you count SSE and _Streamable HTTP_
-as
-seperate).
-Its stdio and "Something over HTTP we didn't relly put that much thought into,
-but the web seems to bw a thing."
+There are essentially two main transport protocols (or three).
+Its stdio and "Something over HTTP we didn't really put that much thought into,
+but the web seems to be a thing probably should support."
 
 ### Stdio
 
 Using std**io** is essentially to start a local MCP Server,
-hooking up std-out and std-in pipes from the server to the client and start sending json.
-Kind of sounds like a socket...
+hooking up `std-out` and `std-in` pipes from the server to the client and start sending json.
+This is not really the way things are usually done in unix/linux land.
+Using them for bidirectional communication kind of breaks the classic pipe pattern.
+When bidirectional communication is needed, we usually reach for a socket. 
+ 
+Kind of sounds like someone were looking for a socket
 
 ### SSE / Streamable HTTP
 
