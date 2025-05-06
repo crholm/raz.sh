@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/crypto/acme/autocert"
 	"gopkg.in/yaml.v3"
@@ -192,6 +193,9 @@ func renderEntry(dir, ga string) http.HandlerFunc {
 			blackfriday.WithExtensions(blackfriday.CommonExtensions|blackfriday.AutoHeadingIDs),
 			blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{Flags: blackfriday.TOC})),
 		)
+
+		p := bluemonday.UGCPolicy().AllowElements("nav").AddTargetBlankToFullyQualifiedLinks(true)
+		htmlBody = p.SanitizeBytes(htmlBody)
 
 		if err := tmpl.Execute(w, struct {
 			FileHeader
