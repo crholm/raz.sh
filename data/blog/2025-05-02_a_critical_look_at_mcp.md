@@ -4,7 +4,6 @@ publish_date: 2025-05-02T00:00:00Z
 title: "A Critical Look at MCP"
 ---
 
-# A Critical Look at MCP
 
 > "MCP is an open protocol that standardizes how applications provide context to LLMs. Think of MCP like a USB-C port for AI
 > applications. Just as USB-C provides a standardized way to connect your devices to various peripherals and accessories, MCP
@@ -16,9 +15,9 @@ title: "A Critical Look at MCP"
 
 I would like for this to turn out to be a skill issue on my part, and hope that I'm missing something.
 
-During the past month, MCP (Model Context Protocol), which would enable LLMs to become agents and interact with the world, has
-really been blowing up. The idea is straightforward: let's standardize an API for LLM/Agents to interact with the world and how to
-inform the LLM/Agent about it.
+During the past month,[MCP (Model Context Protocol)](https://modelcontextprotocol.io/specification/2025-03-26), which would enable
+LLMs to become agents and interact with the world, has really been blowing up. The idea is straightforward: let's standardize an
+API for LLM/Agents to interact with the world and how to inform the LLM/Agent about it.
 
 Things are moving really fast, and IBM recently released their own "orthogonal standard" to MCP
 called [Agent Communication Protocol (ACP)](https://agentcommunicationprotocol.dev), followed closely by Google
@@ -28,13 +27,15 @@ MCP Servers and Clients are being built and published daily, and can be found at
 and [pulsemcp.com](https://www.pulsemcp.com/).
 
 However, I'm astonished by the apparent lack of mature engineering practices. All the major players spend billions of dollars on
-training and tuning their models, only to turn around and, from what I can tell, have an interns write the documentation, providing
-subpar SDKs and very little in terms of implementation guidance.
+training and tuning their models, only to turn around and, from what I can tell, have an interns write the documentation,
+providing subpar SDKs and very little in terms of implementation guidance.
 
 This trend seems to have continued with MCP, resulting in some very strange design decisions, poor documentation, and an even
 worse specification of the actual protocols.
 
-My conclusion is that the whole HTTP transport protocol suggestion should be thrown out and replaced with Websockets, imho.
+My conclusion is that the whole suggested setup for HTTP transport (SSE+HTTP and Streamable HTTP) should be thrown out and
+replaced
+with something that mimics stdio... Websockets.
 
 ## Background
 
@@ -50,12 +51,6 @@ the guiding principle of the standardization effort based on how it feels to wor
 
 Simply put, it is a JSON-RPC protocol with predefined methods/endpoints designed to be used in conjunction with an LLM. This is
 not really the focus of this post, but there are things to be criticized about the protocol itself.
-
-For example, there's a mandatory `id` field in
-the [JSON struct](https://modelcontextprotocol.io/specification/2025-03-26/basic#requests) being sent that can be a `number` or a
-`string` for no clear reason, creating unnecessary complexity for all statically typed languages. This essentially requires
-support for `ints`, `floats`, and `strings` for this single field. Thinking this is a good idea seems only possible if you haven't
-ever ventured outside Python or JS/TS land.
 
 ## Transport
 
@@ -80,11 +75,11 @@ socket.
 However, it is straightforward and easy to reason about, works out of the box in all OSes, no need to deal with sockets, and so
 on. So even if there is a critique to be made, I get it.
 
-### SSE / Streamable HTTP
+### HTTP+SSE / Streamable HTTP
 
-The HTTP transport is another story. There are two versions of the same mistake: SSE (Server-Sent Events) transport and
-"Streamable HTTP" (a made-up term) that uses REST semantics with SSE, but with a whole lot of extra confusion and corner cases on
-top.
+The HTTP transport is another story. There are two versions of the same mistake: HTTP+SSE (Server-Sent Events) transport, which is
+being replaced by "Streamable HTTP" (a made-up term) that uses REST semantics with SSE. But with a whole lot of extra confusion
+and corner cases on top.
 
 It can be summarized as: "Since we like SSE for LLM streaming, we're not using WebSockets. Instead, we're effectively implementing
 WebSockets on top of SSE and calling it 'Streamable HTTP' to make people think it's an accepted/known way of doing things."
@@ -110,7 +105,7 @@ All example servers are implemented in Python or JavaScript, with the intention 
 stdio. Python and JavaScript are probably one of the worst choices of languages for something you want to work on anyone else's
 computer. The authors seem to realize this since all examples are available as Docker containers.
 
-> Be honest—when was the last time you ran `pip install` and didn't end up in dependency hell?
+> Be honest... when was the last time you ran `pip install` and didn't end up in dependency hell?
 
 Am I being pretentious/judgmental in thinking that people in AI only really know Python, and the "well, it works on my computer"
 approach is still considered acceptable? This should be glaringly obvious to anyone that ever tried to run anything from
@@ -122,20 +117,20 @@ C#?
 ### The Problem
 
 When I started implementing the protocol, I immediately felt I had to reverse-engineer it. Important aspects of the SSE portion
-are missing from the documentation, and no one seemed to have implemented the "Streamable HTTP" yet—not even their own tooling
+are missing from the documentation, and no one seemed to have implemented the "Streamable HTTP" yet; not even their own tooling
 like `npx @modelcontextprotocol/inspector@latest`. (To be fair, it might have been a skill issue on my part, pulling the wrong
-version, since it was available when I checked again a few weeks later. It's also available
-at [inspect.mcp.garden](https://inspect.mcp.garden).)
+version, since it was available when I checked again a few weeks later. You can also find version at
+[inspect.mcp.garden](https://inspect.mcp.garden), which might be more convenient.)
 
 Once you grasp the architecture, you quickly realize that implementing an MCP server, or a client, could be a huge effort. The
 problem is that the SSE/Streamable HTTP implementations are trying to act like sockets, emulating stdio, without being one and is
 trying to do _Everything Everywhere All at Once_.
 
-#### SSE Mode
+#### HTTP+SSE Mode
 
 [modelcontextprotocol.io/specification/2024-11-05/basic/transports](https://modelcontextprotocol.io/specification/2024-11-05/basic/transports)
 
-In **SSE mode**, to achieve full duplex, the client sets up an SSE session to (e.g.) `GET /sse` for reads. The first read provides
+In **HTTP+SSE mode**, to achieve full duplex, the client sets up an SSE session to (e.g.) `GET /sse` for reads. The first read provides
 a URL where writes can be posted. The client then proceeds to use the given endpoint for writes, e.g., a request to
 `POST /a-endpoint?session-id=1234`. The server returns a 202 Accepted with no body, and the response to the request should be read
 from the pre-existing open SSE connection on `/sse`.
@@ -260,7 +255,7 @@ _they_ say:
 
 As an industry, we should optimize for the most common use-cases, not the corner-cases.
 
-## Alternatives and Additions
+## Side note: Alternatives and Additions
 
 As discussed above, there seem to be more protocols emerging. MCP is effectively "a protocol to expose an API to an LLM" (which
 can create an agent). The more recent protocols from IBM and Google (ACP and A2A) are effectively "protocols to expose an Agent to
