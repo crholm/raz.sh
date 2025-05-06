@@ -8,7 +8,7 @@
     --solarized-base01: #586e75;
     --solarized-base00: #657b83;
     --solarized-base0: #839496;
-    --solarized-base1: #93a1a1;
+    --solarized-base1: #c6bda3;
     --solarized-base2: #eee8d5;
     --solarized-base3: #fdf6e3;
 
@@ -222,7 +222,7 @@ code {
     padding: 2px 4px;
     border: 1px solid black;
     box-shadow: var(--shadow-z0);
-    white-space: pre-wrap;
+    white-space: pre;
 }
 
 pre code {
