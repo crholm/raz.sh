@@ -147,14 +147,14 @@ h5:before {
 
 
 p {
-    margin: 2rem 0;
+    margin: 2rem 0 0;
     padding: 0;
     color: var(--fg-3);
 }
 
 blockquote {
 
-    padding: 0.1rem 1rem;
+    padding: 0.1rem 1rem 2rem ;
     margin: 1rem 0;
     border-left: 1rem solid var(--red);
     background-color: var(--bg-2);
