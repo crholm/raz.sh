@@ -11,12 +11,6 @@ title: "A Critical Look at MCP"
 >
 > ― Anthropic
 
-## Edit
-
-This post was picked up at quite a few places and discussed 
-- https://news.ycombinator.com/item?id=43945993
-- https://www.reddit.com/r/programming/comments/1kg6zws/a_critical_look_at_mcp/
-- https://lobste.rs/s/eusyqs/critical_look_at_mcp
 
 ## TL;DR
 
@@ -43,6 +37,7 @@ worse specification of the actual protocols.
 My conclusion is that the whole suggested setup for HTTP transport (SSE+HTTP and Streamable HTTP) should be thrown out and
 replaced
 with something that mimics stdio... Websockets.
+
 
 ## Background
 
@@ -285,3 +280,14 @@ agent-building-tool" [BeeAI](https://beeai.dev/)
 What both of the A** protocols bring to the table is a sane transport layer and a way to discover agents.
 
 ![14 competing standards](https://imgs.xkcd.com/comics/standards.png)
+
+
+
+## Edits
+
+
+_2025-05-12:_\
+This post attracted some attention at hacker news and reddit. The discussions can be read at:
+
+- https://news.ycombinator.com/item?id=43945993
+- https://www.reddit.com/r/programming/comments/1kg6zws/a_critical_look_at_mcp/
