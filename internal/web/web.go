@@ -60,8 +60,10 @@ func (s *Server) Start() error {
 	r.Use(middleware.Logger)
 	r.Get("/", renderIndex(s.cfg.DataDir, gaScript(s.cfg.GaTag)))
 	r.Get("/blog/{entry}", renderEntry(s.cfg.DataDir, gaScript(s.cfg.GaTag)))
+
 	r.Get("/blog/media/{file}", serveFiles(filepath.Join(s.cfg.DataDir, "blog", "media")))
 	r.Get("/assets/{file}", serveFiles(filepath.Join(s.cfg.DataDir, "assets")))
+	r.Get("/assets/img/{file}", serveFiles(filepath.Join(s.cfg.DataDir, "assets/img")))
 
 	if !s.cfg.UseTLS {
 		return s.startHTTPServer(r)
@@ -165,7 +167,17 @@ func serveFile(w http.ResponseWriter, r *http.Request, dir, file string) error {
 }
 
 func renderEntry(dir, ga string) http.HandlerFunc {
-	tmpl, err := template.ParseFiles(filepath.Join(dir, "tmpl", "entry.html.tmpl"))
+	tmpl, err := template.New("entry.html.tmpl").Funcs(template.FuncMap{
+		"toDate": func(t any) string {
+			tt, ok := t.(time.Time)
+			if !ok {
+				return ""
+			}
+			//return tt.Format("2006-01-02")
+			return tt.Format("Mon, 02 Jan 2006")
+		},
+	}).ParseFiles(filepath.Join(dir, "tmpl", "entry.html.tmpl"))
+
 	if err != nil {
 		log.Fatalf("Failed to parse entry template: %v", err)
 	}

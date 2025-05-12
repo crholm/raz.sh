@@ -200,7 +200,7 @@ li > p {
 
 .social img {
     width: 25px;
-    height: 25px;
+    /*height: 25px;*/
     border: none;
     margin: 0;
     box-shadow: none;

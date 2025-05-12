@@ -11,6 +11,13 @@ title: "A Critical Look at MCP"
 >
 > ― Anthropic
 
+## Edit
+
+This post was picked up at quite a few places and discussed 
+- https://news.ycombinator.com/item?id=43945993
+- https://www.reddit.com/r/programming/comments/1kg6zws/a_critical_look_at_mcp/
+- https://lobste.rs/s/eusyqs/critical_look_at_mcp
+
 ## TL;DR
 
 I would like for this to turn out to be a skill issue on my part, and hope that I'm missing something.

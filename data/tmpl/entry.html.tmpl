@@ -9,8 +9,8 @@
 
     <meta property="og:title" content="{{.Title}} - Raz Blog">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://raz.sh/assets/blog-banner-5-small.jpg" />
-    <meta name="twitter:image" content="https://raz.sh/assets/blog-banner-5-small.jpg" />
+    <meta property="og:image" content="https://raz.sh/assets/img/blog-banner-5-small-2.jpg" />
+    <meta name="twitter:image" content="https://raz.sh/assets/img/blog-banner-5-small-2.jpg" />
 </head>
 <body>
 
@@ -21,17 +21,17 @@
     </div>
     <div class="social">
         <div>
-            <a href="https://x.com/c_r_holm" target="_blank"><img src="/assets/twitter.png" alt="twitter/x"/></a>
+            <a href="https://x.com/c_r_holm" target="_blank"><img src="/assets/img/twitter.png" alt="twitter/x"/></a>
         </div>
         <div>
-            <a href="https://github.com/crholm/raz.sh" target="_blank"><img src="/assets/github.png" alt="github"/></a>
+            <a href="https://github.com/crholm/raz.sh" target="_blank"><img src="/assets/img/github.png" alt="github"/></a>
         </div>
     </div>
 </div>
 
 <div class="content">
     <h1>{{.Title}}</h1>
-
+    <p><small><em>Rasmus Holm  -  {{toDate .FileHeader.PublishDate}}</em></small></p>
     {{.Body}}
 </div>
 
@@ -42,8 +42,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-
-
 <script>hljs.highlightAll();</script>
+
 </html>
