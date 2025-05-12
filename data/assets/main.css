@@ -267,10 +267,10 @@ th, td {
 
 hr {
     border: 0;
-    height: 7px;
+    height: 4px;
     background: var(--green);
     margin: 2rem 0;
-    box-shadow: var(--shadow-z1);
+    box-shadow: var(--shadow-z0);
 }
 
 nav {
