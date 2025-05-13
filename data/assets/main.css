@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 /*@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');*/
 
+@import "swich.css";
+
 :root {
 
     --solarized-base03: #002b36;
@@ -49,12 +51,24 @@
     --fg-2: var(--theme-600);
     --fg-3: var(--theme-700);
 
-    --shadow-z0: 2px 2px var(--theme-800);
-    --shadow-z1: 4px 4px var(--theme-800);
-    --shadow-z2: 8px 8px var(--theme-800);
+
 
 }
 
+body.dark-mode {
+    --bg-0: var(--theme-700);
+    --bg-1: var(--theme-800);
+    --bg-2: var(--theme-600);
+    --fg-0: var(--theme-400);
+    --fg-1: var(--theme-300);
+    --fg-2: var(--theme-200);
+    --fg-3: var(--theme-100);
+
+    --shadow-color: black;
+    .social img {
+        filter: invert(75%);
+    }
+}
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -67,7 +81,16 @@ body {
     line-height: 2rem;
     letter-spacing: 0.05rem;
 
+
+    --shadow-color: var(--theme-800);
+    --border-color: black;
+    --shadow-z0: 2px 2px var(--shadow-color);
+    --shadow-z1: 4px 4px var(--shadow-color);
+    --shadow-z2: 8px 8px var(--shadow-color);
+
 }
+
+
 
 
 h1, h2, h3, h4, h5, h6 {
@@ -75,7 +98,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 3rem 0 2rem;
     padding: 10px;
     color: var(--green);
-    border: 2px black solid;
+    border: 2px var(--border-color) solid;
     box-shadow: var(--shadow-z1);
     background: var(--bg-0);
 }
@@ -298,4 +321,14 @@ nav > ul {
 ul, ol, p, blockquote, nav, pre {
     margin-right: 1rem;
     margin-left: 1rem;
+}
+
+
+.dark-mode-toggle{
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    /*height: 2rem;*/
+    padding: 1rem;
 }

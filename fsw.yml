@@ -1,0 +1,20 @@
+desc: re builds go
+triggers:
+  - name: 'Go'
+    pattens:
+      - '**/*.go'
+      - '**/*.css'
+      - '**/*.js'
+      - '**/*.tmpl'
+    cmd: |-
+      go run ./razsh.go serve --http-interface=:8080
+    
+
+    shell: true
+    delay: 100ms
+    stop_timeout: 1000ms
+    signal: KILL
+    kill_signal: 'SIGTERM'
+watch_paths:
+  - .
+watch_depth: 20

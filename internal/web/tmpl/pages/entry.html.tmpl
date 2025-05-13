@@ -1,0 +1,13 @@
+{{template "_main.html.tmpl" .}}
+{{define "content"}}
+
+
+
+    <h1>{{.Title}}</h1>
+
+    <p><small><em>Rasmus Holm  -  {{format_time .FileHeader.PublishDate "Mon, 02 Jan 2006"}}</em></small></p>
+
+    {{.Body}}
+
+
+{{end}}

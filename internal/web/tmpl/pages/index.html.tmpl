@@ -1,0 +1,9 @@
+{{template "_main.html.tmpl" .}}
+{{define "content"}}
+        {{ range .}}
+
+            <ul style="font-size: 1.5rem">
+                <li><a href="/blog/{{.Slug}}">{{format_time .PublishDate "2006-01-02"}} - {{.Title}}</a></li>
+            </ul>
+        {{end}}
+{{end}}
