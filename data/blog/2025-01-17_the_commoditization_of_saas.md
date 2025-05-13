@@ -24,7 +24,7 @@ barely functional version is the first tier, the second is the functional one ev
 to buy, and the third tier is really the same as the second tier but all the things needed by an
 organization larger than 10 people are locked up here the "Enterprise" tier. It usually consists of
 things like, SSO, Audit Logs, User management, Role management, integrations, SOC reports, etc. (a
-blog entry on the SSO part, https://raz.sh/blog/2024-11-27_weaponizing_sso_for_profit)
+blog entry on the SSO part, [raz.sh/blog/2024-11-27_weaponizing_sso_for_profit](https://raz.sh/blog/2024-11-27_weaponizing_sso_for_profit))
 
 > Alright, so what is so bad about this? companies can afford it right?
 

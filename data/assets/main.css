@@ -145,7 +145,11 @@ h5:before {
     white-space: pre;
 }
 
-
+.title {
+    color: var(--green);
+    font-size: 3rem;
+    font-weight: bold;
+}
 .title a {
     color: var(--green);
     border-bottom: 2px solid var(--green);
@@ -156,7 +160,7 @@ h5:before {
     justify-content: space-between;
     align-items: center;
     max-width: 1000px;
-    margin: 30px auto 0;
+    margin: 0.2rem auto 0;
     padding: 20px;
     border: 3px black solid;
     box-shadow: var(--shadow-z2);
@@ -167,12 +171,14 @@ h5:before {
 
 }
 
-.title {
-    color: var(--green);
-    font-size: 3rem;
-    font-weight: bold;
+.settings {
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    /*height: 2rem;*/
+    padding: 0.2rem 0.4rem;
 }
-
 
 p {
     margin: 2rem 0 0;
@@ -353,11 +359,3 @@ ul, ol, p, blockquote, nav, pre {
 }
 
 
-.settings {
-    position: relative;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    /*height: 2rem;*/
-    padding: 0.2rem 0.4rem;
-}
