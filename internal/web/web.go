@@ -152,6 +152,66 @@ func serveDir(dir string) http.HandlerFunc {
 	}
 }
 
+func getInfo(r *http.Request) map[string]any {
+	info := map[string]any{}
+	info["dark-mode"] = false
+	if c, err := r.Cookie("dark-mode"); err == nil {
+		info["dark-mode"], _ = strconv.ParseBool(c.Value)
+	}
+	return info
+}
+
+func renderFeed(dir string, _type string) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		entries, err := getPublicEntries(filepath.Join(dir, "blog"))
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		feed := feeds.Feed{
+			Title:       "Raz Blog",
+			Link:        &feeds.Link{Href: "https://raz.sh"},
+			Description: "A fintech CTOs takes on tech and development",
+			Author:      &feeds.Author{Name: "Rasmus Holm"},
+			Created:     time.Now(),
+			Updated:     time.Now(),
+			Image:       &feeds.Image{Link: "https://raz.sh/assets/img/blog-banner-5-small-2.jpg"},
+		}
+
+		feed.Items = slicez.Map(entries, func(entry FileHeader) *feeds.Item {
+			return &feeds.Item{
+				Id:          "https://raz.sh/blog/" + entry.Slug,
+				Title:       entry.Title,
+				Link:        &feeds.Link{Href: "https://raz.sh/blog/" + entry.Slug},
+				Description: entry.Description,
+				Created:     entry.PublishDate,
+				Updated:     entry.Touched,
+			}
+		})
+
+		feed.Updated = slicez.Fold(entries, func(a time.Time, b FileHeader) time.Time {
+			if b.Touched.After(a) {
+				return b.Touched
+			}
+			return a
+		}, time.Time{})
+
+		switch _type {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+			feed.WriteJSON(w)
+		case "atom":
+			w.Header().Set("Content-Type", "application/atom+xml")
+			feed.WriteAtom(w)
+		default:
+			w.Header().Set("Content-Type", "application/rss+xml")
+			feed.WriteRss(w)
+		}
+	}
+}
+
 func renderEntry(dir string) http.HandlerFunc {
 
 	t, err := tmpl.BaseTemplate()
@@ -206,66 +266,6 @@ func renderEntry(dir string) http.HandlerFunc {
 	}
 }
 
-func getInfo(r *http.Request) map[string]any {
-	info := map[string]any{}
-	info["dark-mode"] = false
-	if c, err := r.Cookie("dark-mode"); err == nil {
-		info["dark-mode"], _ = strconv.ParseBool(c.Value)
-	}
-	return info
-}
-
-func renderFeed(dir string, _type string) http.HandlerFunc {
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		entries, err := getPublicEntries(filepath.Join(dir, "blog"))
-		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-
-		feed := feeds.Feed{
-			Title:       "Raz Blog",
-			Link:        &feeds.Link{Href: "https://raz.sh"},
-			Description: "A fin-techs CTOs takes on tech and development",
-			Author:      &feeds.Author{Name: "Rasmus Holm"},
-			Created:     time.Now(),
-			Updated:     time.Now(),
-			Image:       &feeds.Image{Link: "https://raz.sh/assets/img/blog-banner-5-small-2.jpg"},
-		}
-
-		feed.Items = slicez.Map(entries, func(entry FileHeader) *feeds.Item {
-			return &feeds.Item{
-				Id:          "https://raz.sh/blog/" + entry.Slug,
-				Title:       entry.Title,
-				Link:        &feeds.Link{Href: "https://raz.sh/blog/" + entry.Slug},
-				Description: entry.Description,
-				Created:     entry.PublishDate,
-				Updated:     entry.Touched,
-			}
-		})
-
-		feed.Updated = slicez.Fold(entries, func(a time.Time, b FileHeader) time.Time {
-			if b.Touched.After(a) {
-				return b.Touched
-			}
-			return a
-		}, time.Time{})
-
-		switch _type {
-		case "json":
-			w.Header().Set("Content-Type", "application/json")
-			feed.WriteJSON(w)
-		case "atom":
-			w.Header().Set("Content-Type", "application/atom+xml")
-			feed.WriteAtom(w)
-		default:
-			w.Header().Set("Content-Type", "application/rss+xml")
-			feed.WriteRss(w)
-		}
-	}
-}
-
 func renderIndex(dir string) http.HandlerFunc {
 
 	t, err := tmpl.BaseTemplate()
@@ -278,13 +278,6 @@ func renderIndex(dir string) http.HandlerFunc {
 		log.Printf("Error loading index template: %v", err)
 		panic(fmt.Errorf("error loading index template: %v", err))
 	}
-
-	templateNames := make([]string, 0, len(t.Templates()))
-	for _, tt := range t.Templates() {
-		templateNames = append(templateNames, tt.Name())
-	}
-	sort.Strings(templateNames)
-	log.Printf("Available templates: %v", templateNames)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		entries, err := getPublicEntries(filepath.Join(dir, "blog"))
