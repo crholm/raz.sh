@@ -6,13 +6,35 @@
     <title>{{.Title}}}</title>
     <link rel="stylesheet" href="/assets/main.css">
 
+    <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+
+    <link rel="alternate" type="application/rss+xml" title="Raz Blog - RSS Feed" href="/blog.rss"
+    />
+    <link rel="alternate" type="application/atom+xml" title="Raz Blog - ATOM Feed" href="/blog.atom"
+    />
+    <link rel="alternate" type="application/json" title="Raz Blog - JSON Feed" href="/feed.json"
+    />
+
+
+
     <meta property="og:title" content="Raz Blog">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://raz.sh/assets/img/blog-banner-5-small-2.jpg" />
     <meta name="twitter:image" content="https://raz.sh/assets/img/blog-banner-5-small-2.jpg" />
 </head>
-<body>
 
+<body class="{{ if index .Info "dark-mode" }}dark{{end}}">
+
+
+<div class="settings">
+    <!-- From Uiverse.io by andrew-demchenk0 -->
+    <label class="switch">
+        <span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g ><circle r="5" cy="12" cx="12"></circle><path d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"></path></g></svg></span>
+        <span class="moon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg></span>
+        <input type="checkbox" class="input" onchange="toggleDarkMode()" {{ if index .Info "dark-mode" }}checked="checked"{{end}}>
+        <span class="slider"></span>
+    </label>
+</div>
 
 <div class="header">
     <div class="title">
@@ -21,6 +43,9 @@
     <div class="social">
         <div>
             <a href="https://x.com/c_r_holm" target="_blank"><img src="/assets/img/twitter.png" alt="twitter/x"/></a>
+        </div>
+        <div>
+            <a href="https://raz.sh/blog.rss" target="_blank"><img src="/assets/img/rss.png" alt="rss"/></a>
         </div>
         <div>
             <a href="https://github.com/crholm/raz.sh" target="_blank"><img src="/assets/img/github.png" alt="github"/></a>

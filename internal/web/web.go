@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/gorilla/feeds"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/modfin/henry/slicez"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/crypto/acme/autocert"
 	"gopkg.in/yaml.v3"
@@ -18,6 +20,7 @@ import (
 	"path/filepath"
 	"raz.sh/internal/web/tmpl"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -54,6 +57,9 @@ func (s *Server) Start() error {
 	r.Use(middleware.Logger)
 
 	r.Get("/", renderIndex(s.cfg.DataDir))
+	r.Get("/blog.atom", renderFeed(s.cfg.DataDir, "atom"))
+	r.Get("/blog.rss", renderFeed(s.cfg.DataDir, "rss"))
+	r.Get("/blog.json", renderFeed(s.cfg.DataDir, "json"))
 	r.Get("/blog/{entry}", renderEntry(s.cfg.DataDir))
 
 	r.Get("/blog/media/{file}", serveDir(filepath.Join(s.cfg.DataDir, "blog", "media")))
@@ -187,6 +193,7 @@ func renderEntry(dir string) http.HandlerFunc {
 		htmlBody = p.SanitizeBytes(htmlBody)
 
 		if err := t.Lookup(tmpl.PAGE_ENTRY).Execute(w, Page{
+			Info:  getInfo(r),
 			Title: header.Title + "- Raz Blog",
 			Content: BlogEntry{
 				FileHeader: header,
@@ -195,6 +202,66 @@ func renderEntry(dir string) http.HandlerFunc {
 		}); err != nil {
 			log.Printf("Error rendering entry template: %v", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+	}
+}
+
+func getInfo(r *http.Request) map[string]any {
+	info := map[string]any{}
+	info["dark-mode"] = false
+	if c, err := r.Cookie("dark-mode"); err == nil {
+		info["dark-mode"], _ = strconv.ParseBool(c.Value)
+	}
+	return info
+}
+
+func renderFeed(dir string, _type string) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		entries, err := getPublicEntries(filepath.Join(dir, "blog"))
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		feed := feeds.Feed{
+			Title:       "Raz Blog",
+			Link:        &feeds.Link{Href: "https://raz.sh"},
+			Description: "A fin-techs CTOs takes on tech and development",
+			Author:      &feeds.Author{Name: "Rasmus Holm"},
+			Created:     time.Now(),
+			Updated:     time.Now(),
+			Image:       &feeds.Image{Link: "https://raz.sh/assets/img/blog-banner-5-small-2.jpg"},
+		}
+
+		feed.Items = slicez.Map(entries, func(entry FileHeader) *feeds.Item {
+			return &feeds.Item{
+				Id:          "https://raz.sh/blog/" + entry.Slug,
+				Title:       entry.Title,
+				Link:        &feeds.Link{Href: "https://raz.sh/blog/" + entry.Slug},
+				Description: entry.Description,
+				Created:     entry.PublishDate,
+				Updated:     entry.Touched,
+			}
+		})
+
+		feed.Updated = slicez.Fold(entries, func(a time.Time, b FileHeader) time.Time {
+			if b.Touched.After(a) {
+				return b.Touched
+			}
+			return a
+		}, time.Time{})
+
+		switch _type {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+			feed.WriteJSON(w)
+		case "atom":
+			w.Header().Set("Content-Type", "application/atom+xml")
+			feed.WriteAtom(w)
+		default:
+			w.Header().Set("Content-Type", "application/rss+xml")
+			feed.WriteRss(w)
 		}
 	}
 }
@@ -227,6 +294,7 @@ func renderIndex(dir string) http.HandlerFunc {
 		}
 
 		err = t.ExecuteTemplate(w, tmpl.PAGE_INDEX, Page{
+			Info:    getInfo(r),
 			Title:   "Raz Blog",
 			Content: entries,
 		})
@@ -287,6 +355,11 @@ func readHeader(file string) (FileHeader, error) {
 		return FileHeader{}, err
 	}
 
+	stat, err := os.Stat(file)
+	if err != nil {
+		return FileHeader{}, fmt.Errorf("failed to get file info: %w", err)
+	}
+	header.Touched = stat.ModTime()
 	return header, nil
 }
 

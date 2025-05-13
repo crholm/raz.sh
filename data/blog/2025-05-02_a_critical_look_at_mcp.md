@@ -2,6 +2,8 @@
 public: true
 publish_date: 2025-05-02T00:00:00Z
 title: "A Critical Look at MCP"
+description: |-
+  This blog post offers a critical analysis of the Model Context Protocol (MCP), intended to standardize how applications provide context to Large Language Models (LLMs) for agent capabilities. The author expresses surprise at the perceived lack of mature engineering practices surrounding MCP, particularly in documentation and SDKs. While acknowledging the straightforward nature of the stdio transport option, the post strongly critiques the HTTP-based transports: HTTP+SSE and "Streamable HTTP." The author argues that these approaches unnecessarily complicate implementation and introduce potential security vulnerabilities by attempting to emulate socket-like behavior without using WebSockets. The piece details the complexities of session management and request handling in the HTTP modes and suggests that adopting WebSockets would simplify the protocol and align it more closely with the simplicity of stdio. The author also briefly touches on competing protocols, ACP and A2A, suggesting they might be largely redundant to MCP with minor additions.
 ---
 
 

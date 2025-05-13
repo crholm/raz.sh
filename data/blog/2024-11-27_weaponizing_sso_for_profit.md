@@ -2,6 +2,8 @@
 public: true
 publish_date: 2024-11-27T00:00:00Z
 title: "Weaponizing SSO for profit"
+description: |-
+  This blog post discusses the concerning trend of SaaS vendors placing Single Sign-On (SSO) behind premium pricing tiers. The author, a CTO at a fintech company, argues that SSO has become a fundamental security requirement, driven by regulations like NIS, NIS2, and DORA, and security frameworks such as ISO 27001. Instead of being a standard feature, it's being "weaponized" to push companies into higher, more expensive tiers. The article highlights that while cost-based pricing models often include SSO for free, value-based models frequently restrict it to premium subscriptions, leading to significantly higher costs for essential security. The author calls out this practice as detrimental and provides a list of companies that charge extra for SSO.
 ---
 
 This article looks at the practice of SaaS vendors placing Single Sign-On,

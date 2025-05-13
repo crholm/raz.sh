@@ -2,6 +2,8 @@
 public: true
 publish_date: 2025-05-01T00:00:00Z
 title: "The Commoditization of SaaS"
+description: |-
+  This article examines the evolution of SaaS from a niche market to the dominant business model for tech products, particularly in the B2B sector. Initially offering scalability and flexibility through per-seat models, the author argues that this has led to customer exploitation, inflated costs, and the pricing of commodities as luxury items. The piece analyzes how essential features like SSO, audit logs, and user management are often locked behind expensive "Enterprise" tiers. By comparing the software landscape of the past with the present, the author illustrates how the proliferation of per-user subscriptions for services like communication and file storage has significantly increased costs despite the commoditization of many of these services, using Slack as a prime example of a product priced as a luxury despite readily available and often included alternatives. The article concludes that while the commoditization of SaaS is a positive development, pricing strategies have not adjusted to reflect this reality, leaving many businesses overpaying for services that have become standard.
 ---
 
 ## Background

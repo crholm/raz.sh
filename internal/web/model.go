@@ -6,6 +6,7 @@ import (
 )
 
 type Page struct {
+	Info    map[string]any
 	Title   string
 	Content any
 }
@@ -13,6 +14,8 @@ type Page struct {
 type FileHeader struct {
 	Title       string    `yaml:"title"`
 	Slug        string    `yaml:"slug"`
+	Description string    `yaml:"description"`
+	Touched     time.Time `yaml:"-"`
 	PublishDate time.Time `yaml:"publish_date"`
 	Public      bool      `yaml:"public"`
 }

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 /*@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');*/
 
-@import "swich.css";
+@import "dark-mode.css";
 
 :root {
 
@@ -34,14 +34,14 @@
     --theme-700: var(--solarized-base02);
     --theme-800: var(--solarized-base03);
 
-    --yellow:  var(--solarized-yellow);
-    --orange:  var(--solarized-orange);
-    --red:     var(--solarized-red);
+    --yellow: var(--solarized-yellow);
+    --orange: var(--solarized-orange);
+    --red: var(--solarized-red);
     --magenta: var(--solarized-magenta);
-    --violet:  var(--solarized-violet);
-    --blue:    var(--solarized-blue);
-    --cyan:    var(--solarized-cyan);
-    --green:   var(--solarized-green);
+    --violet: var(--solarized-violet);
+    --blue: var(--solarized-blue);
+    --cyan: var(--solarized-cyan);
+    --green: var(--solarized-green);
 
     --bg-0: var(--theme-100);
     --bg-1: var(--theme-200);
@@ -52,10 +52,9 @@
     --fg-3: var(--theme-700);
 
 
-
 }
 
-body.dark-mode {
+body.dark {
     --bg-0: var(--theme-700);
     --bg-1: var(--theme-800);
     --bg-2: var(--theme-600);
@@ -65,6 +64,7 @@ body.dark-mode {
     --fg-3: var(--theme-100);
 
     --shadow-color: black;
+
     .social img {
         filter: invert(75%);
     }
@@ -91,8 +91,6 @@ body {
 }
 
 
-
-
 h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     margin: 3rem 0 2rem;
@@ -105,14 +103,18 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     margin-top: 1rem;
+    padding-top: 1rem;
 
 }
 
-h1:before {
-    content: "> ";
-    display: inline-block;
+h1:after {
+    content: "===========================================================================================";
+    display: block;
     font-family: monospace;
     white-space: pre;
+    font-weight: normal;
+    padding: 0.5rem 0 0;
+    overflow: hidden;
 }
 
 h2:before {
@@ -154,11 +156,15 @@ h5:before {
     justify-content: space-between;
     align-items: center;
     max-width: 1000px;
-    margin: 30px auto;
+    margin: 30px auto 0;
     padding: 20px;
     border: 3px black solid;
     box-shadow: var(--shadow-z2);
     background: var(--bg-0);
+    a, a:hover{
+        border-bottom : none;
+    }
+
 }
 
 .title {
@@ -166,7 +172,6 @@ h5:before {
     font-size: 3rem;
     font-weight: bold;
 }
-
 
 
 p {
@@ -180,7 +185,7 @@ blockquote {
         margin-top: 0;
     }
 
-    padding: 2rem 1rem 2rem ;
+    padding: 2rem 1rem 2rem;
     margin: 1rem 0;
     border-left: 1rem solid var(--red);
     background-color: var(--bg-2);
@@ -189,10 +194,25 @@ blockquote {
 }
 
 
+ul.index {
+    font-size: 1.5rem;
+    li {
+        padding: 0.4rem 0
+    }
+}
+
+ul {
+    list-style-type: "\203A  ";
+}
+
 ul, ol {
     margin: 10px 0;
     padding-left: 20px;
     color: var(--fg-3);
+}
+
+li {
+    padding: 0.2rem 0
 }
 
 li > p {
@@ -207,33 +227,38 @@ li > p {
 }
 
 
-
-
 .social {
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    a{
+        &:hover {
+            border: none;
+            background: none;
+        }
+        border: none;
+        line-height: 0;
+    }
+    div{
+        line-height: 0;
+        padding: 0 2px;
+    }
+    img {
+        width: 1.8rem;
+        border: none;
+        margin: 0;
+        box-shadow: none;
+    }
 
-.social a {
-    border: none;
-}
 
-.social a:hover {
-    border: none;
-    background: none;
-}
-
-.social img {
-    width: 25px;
-    /*height: 25px;*/
-    border: none;
-    margin: 0;
-    box-shadow: none;
 }
 
 a {
     color: var(--red);
     text-decoration: none;
     border-bottom: 2px solid var(--red);
-    word-break:  break-word;
+    word-break: break-word;
 }
 
 a:hover {
@@ -245,10 +270,14 @@ a:hover {
 code {
     font-size: 1.1rem;
     background-color: var(--bg-0);
-    padding: 2px 4px;
+    padding: 0 4px;
     border: 1px solid black;
     box-shadow: var(--shadow-z0);
+    display: inline-block;
+    line-height: 1.2rem;
     white-space: pre;
+    overflow-x: clip;
+    max-width: 100%;
 }
 
 pre code {
@@ -324,11 +353,11 @@ ul, ol, p, blockquote, nav, pre {
 }
 
 
-.dark-mode-toggle{
+.settings {
     position: relative;
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
     /*height: 2rem;*/
-    padding: 1rem;
+    padding: 0.2rem 0.4rem;
 }

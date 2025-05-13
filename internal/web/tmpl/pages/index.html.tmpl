@@ -1,9 +1,14 @@
 {{template "_main.html.tmpl" .}}
 {{define "content"}}
-        {{ range .}}
 
-            <ul style="font-size: 1.5rem">
-                <li><a href="/blog/{{.Slug}}">{{format_time .PublishDate "2006-01-02"}} - {{.Title}}</a></li>
-            </ul>
-        {{end}}
+   Rasmus Holm
+   | CTO & Co-Founder of <a target="_blank" href="https://modularfinance.com">Modular Finance</a>
+   | Software engineer | Stockholm, Sweden <br/>
+   <em>Writing on tech, opinions & guides</em>
+    <h1>Index</h1>
+   <ul class="index">
+    {{ range .}}
+            <li>{{format_time .PublishDate "2006-01-02"}} &#8250; <a href="/blog/{{.Slug}}">{{.Title}}</a></li>
+    {{end}}
+   </ul>
 {{end}}

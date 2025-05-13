@@ -6,6 +6,7 @@ triggers:
       - '**/*.css'
       - '**/*.js'
       - '**/*.tmpl'
+      - '**/*.html.tmpl'
     cmd: |-
       go run ./razsh.go serve --http-interface=:8080
     

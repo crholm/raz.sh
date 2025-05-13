@@ -2,5 +2,7 @@
 
 
 function toggleDarkMode() {
-    document.querySelector("body").classList.toggle("dark-mode")
+    const body = document.querySelector("body");
+    body.classList.toggle("dark");
+    document.cookie = `dark-mode=${body.classList.contains("dark") ? "true" : "false"}; Path=/`;
 }
