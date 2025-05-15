@@ -165,6 +165,28 @@ p {
 }
 ```
 
+#### Paragraph Width
+
+Beyond font choice, the width of your text blocks significantly
+affects readability. If lines of text are too wide, it becomes challenging
+for the eye to track from the end of one line to the beginning of the next.
+This can lead to fatigue, reduced reading speed, and difficulty
+comprehending the content.
+
+Personally, if lines stretch too far, especially when I'm tired, it becomes
+almost uncomfortable due to the amount of focus needed to read the text.
+This is why I get so frustrated with Gmail—it has been around for 20+ years
+and they still haven't implemented a reasonable max-width for messages.
+
+The optimal line length for comfortable reading is generally considered to
+be between 45 and 75 characters per line.
+
+```css
+p {
+    max-width: 75ch;
+}
+```
+
 ### Spacing
 
 Thoughtful use of spacing can significantly impact readability, especially
@@ -182,7 +204,7 @@ average character width.
 
 ```css 
 p {
-    /*0.05em - 0.15em or 0.1ch - 0.3ch*/
+    /*0.1ch - 0.3ch*/
     letter-spacing: 0.1ch;
 }
 ```
@@ -196,7 +218,7 @@ word-spacing can make a noticeable difference.
 
 ```css 
 p {
-    /*0.1em - 0.3em, 0.1ch - 0.5ch*/
+    /* 0.1ch - 0.5ch*/
     word-spacing: 0.2ch;
 }
 ```
@@ -229,24 +251,3 @@ p {
 }
 ```
 
-#### Paragraph Width
-
-Beyond font choice and spacing, the width of your text blocks significantly
-affects readability. If lines of text are too wide, it becomes challenging
-for the eye to track from the end of one line to the beginning of the next.
-This can lead to fatigue, reduced reading speed, and difficulty
-comprehending the content.
-
-Personally, if lines stretch too far, especially when I'm tired, it becomes
-almost uncomfortable due to the amount of focus needed to read the text.
-This is why I get so frustrated with Gmail—it has been around for 20+ years
-and they still haven't implemented a reasonable max-width for messages.
-
-The optimal line length for comfortable reading is generally considered to
-be between 45 and 75 characters per line.
-
-```css
-p {
-    max-width: 75ch;
-}
-```
