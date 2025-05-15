@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-/*@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');*/
-
 @import "dark-mode.css";
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');*/
+
+
 
 :root {
 
@@ -52,7 +53,22 @@
     --fg-3: var(--theme-700);
 
 
+
 }
+
+/* Dyslexic / reading friendly */
+body {
+    --weight-normal: 300;
+    --weight-bold: 500;
+    --weight-bolder: 700;
+    font-family: "Lexend", sans-serif;
+    font-weight: var(--weight-normal);
+    font-size: 1.2rem;
+    line-height: 1.6em;
+    letter-spacing: 0.06em;
+    word-spacing: 0.1em;
+}
+
 
 body.dark {
     --bg-0: var(--theme-700);
@@ -68,18 +84,19 @@ body.dark {
     .social img {
         filter: invert(75%);
     }
+
+    blockquote {
+        background-color: var(--bg-0);
+    }
+
 }
 
 body {
-    font-family: "Open Sans", sans-serif;
     background-color: var(--bg-1);
     color: var(--fg-2);
     margin: 0;
     padding: 0;
-    font-size: 1.2rem;
-    /*Dyslexic friendly*/
-    line-height: 2rem;
-    letter-spacing: 0.05rem;
+
 
 
     --shadow-color: var(--theme-800);
@@ -92,7 +109,8 @@ body {
 
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
+    /*font-weight: bold;*/
+    font-weight: var(--weight-bold);
     margin: 3rem 0 2rem;
     padding: 10px;
     color: var(--green);
@@ -148,8 +166,9 @@ h5:before {
 .title {
     color: var(--green);
     font-size: 3rem;
-    font-weight: bold;
+    font-weight: var(--weight-bold);
 }
+
 .title a {
     color: var(--green);
     border-bottom: 2px solid var(--green);
@@ -165,8 +184,9 @@ h5:before {
     border: 3px black solid;
     box-shadow: var(--shadow-z2);
     background: var(--bg-0);
-    a, a:hover{
-        border-bottom : none;
+
+    a, a:hover {
+        border-bottom: none;
     }
 
 }
@@ -202,6 +222,7 @@ blockquote {
 
 ul.index {
     font-size: 1.5rem;
+
     li {
         padding: 0.4rem 0
     }
@@ -222,7 +243,7 @@ li {
 }
 
 li > p {
-    margin-left: 0;
+    margin: 0;
 }
 
 
@@ -238,18 +259,22 @@ li > p {
     justify-content: center;
     align-items: center;
     padding: 0;
-    a{
+
+    a {
         &:hover {
             border: none;
             background: none;
         }
+
         border: none;
         line-height: 0;
     }
-    div{
+
+    div {
         line-height: 0;
         padding: 0 2px;
     }
+
     img {
         width: 1.8rem;
         border: none;
@@ -276,7 +301,7 @@ a:hover {
 code {
     font-size: 1.1rem;
     background-color: var(--bg-0);
-    padding: 0 4px;
+    padding: 4px;
     border: 1px solid black;
     box-shadow: var(--shadow-z0);
     display: inline-block;
@@ -290,6 +315,7 @@ pre code {
     border: none;
     box-shadow: none;
     white-space: pre;
+    line-height: 1.3em;
 }
 
 pre {
@@ -304,7 +330,7 @@ pre {
 img {
     max-width: 95%;
     height: auto;
-    border: 2px solid #5d9f5b;
+    border: 3px solid #000000;
     box-shadow: var(--shadow-z1);
     margin-right: 1rem;
 }
@@ -359,3 +385,16 @@ ul, ol, p, blockquote, nav, pre {
 }
 
 
+.cover-image {
+    width: 100%;
+    height: 25rem;
+    max-height: 33vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+
+    border: 3px var(--border-color) solid;
+    box-shadow: var(--shadow-z1);
+
+}

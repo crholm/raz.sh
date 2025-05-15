@@ -62,7 +62,7 @@ func (s *Server) Start() error {
 	r.Get("/blog.json", renderFeed(s.cfg.DataDir, "json"))
 	r.Get("/blog/{entry}", renderEntry(s.cfg.DataDir))
 
-	r.Get("/blog/media/{file}", serveDir(filepath.Join(s.cfg.DataDir, "blog", "media")))
+	r.Get("/blog/media/*", serveDir(filepath.Join(s.cfg.DataDir, "blog", "media")))
 	r.Get("/assets/*", serveDir(filepath.Join(s.cfg.DataDir, "assets")))
 
 	if !s.cfg.UseTLS {

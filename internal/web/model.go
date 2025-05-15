@@ -14,6 +14,7 @@ type Page struct {
 type FileHeader struct {
 	Title       string    `yaml:"title"`
 	Slug        string    `yaml:"slug"`
+	Image       string    `yaml:"image"`
 	Description string    `yaml:"description"`
 	Touched     time.Time `yaml:"-"`
 	PublishDate time.Time `yaml:"publish_date"`

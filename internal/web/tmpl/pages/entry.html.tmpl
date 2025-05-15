@@ -3,10 +3,13 @@
 
 
 
+
    <small><em>Rasmus Holm  -  {{format_time .FileHeader.PublishDate "Mon, 02 Jan 2006"}}</em></small>
 
     <h1>{{.Title}}</h1>
-
+   {{if .FileHeader.Image}}
+       <div class="cover-image" style="background-image: url({{.FileHeader.Image}})"></div>
+   {{end}}
 
     {{.Body}}
 
