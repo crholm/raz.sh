@@ -2,8 +2,9 @@
 public: true
 publish_date: 2025-05-02T00:00:00Z
 title: "A Critical Look at MCP"
+image: /blog/media/2025-05-02_a_critical_look_at_mcp/cover.jpg
 description: |-
-  This blog post offers a critical analysis of the Model Context Protocol (MCP), intended to standardize how applications provide context to Large Language Models (LLMs) for agent capabilities. The author expresses surprise at the perceived lack of mature engineering practices surrounding MCP, particularly in documentation and SDKs. While acknowledging the straightforward nature of the stdio transport option, the post strongly critiques the HTTP-based transports: HTTP+SSE and "Streamable HTTP." The author argues that these approaches unnecessarily complicate implementation and introduce potential security vulnerabilities by attempting to emulate socket-like behavior without using WebSockets. The piece details the complexities of session management and request handling in the HTTP modes and suggests that adopting WebSockets would simplify the protocol and align it more closely with the simplicity of stdio. The author also briefly touches on competing protocols, ACP and A2A, suggesting they might be largely redundant to MCP with minor additions.
+  Over the past month, I've dived into the Model Context Protocol (MCP), which is gaining a lot of traction for standardizing how LLMs interact with external contexts and tools. While the idea is solid, I'm quite concerned by what I see as a lack of mature engineering practices, particularly in its HTTP transport mechanisms like SSE+HTTP and the newer "Streamable HTTP". I found these approaches to be overly complex, poorly documented, and leading to significant implementation headaches and potential security vulnerabilities. My strong feeling is that the current HTTP transport design should be replaced with WebSockets, as it would more simply and effectively mimic the stdio transport that MCP also supports. I'm also a bit bewildered by the emergence of similar protocols like ACP and A2A, which seem to add unnecessary fragmentation.
 ---
 
 

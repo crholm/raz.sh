@@ -61,6 +61,11 @@ body {
     --weight-normal: 300;
     --weight-bold: 500;
     --weight-bolder: 700;
+
+    /*content width of main element on site*/
+    /*--content-width: 60rem;*/
+    --content-width: 75ch;
+
     font-family: "Lexend", sans-serif;
     font-weight: var(--weight-normal);
     font-size: 1.2rem;
@@ -178,7 +183,7 @@ h5:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1000px;
+    max-width: var(--content-width);
     margin: 0.2rem auto 0;
     padding: 20px;
     border: 3px black solid;
@@ -248,7 +253,7 @@ li > p {
 
 
 .content {
-    max-width: 1000px;
+    max-width: var(--content-width);
     margin: 0 auto;
     padding: 20px;
 }
@@ -319,8 +324,8 @@ pre code {
 }
 
 pre {
-    background-color: #f4f4f4;
-    padding: 10px;
+    background-color: var(--bg-0);
+    /*padding: 10px;*/
     border: 1px solid #000000;
     overflow-x: auto;
     box-shadow: var(--shadow-z1);
@@ -387,14 +392,14 @@ ul, ol, p, blockquote, nav, pre {
 
 .cover-image {
     width: 100%;
-    height: 25rem;
+    height: 20rem;
     max-height: 33vh;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin: 0;
-
-    border: 3px var(--border-color) solid;
+    margin-bottom: 1rem;
+    border: 2px var(--border-color) solid;
     box-shadow: var(--shadow-z1);
 
 }
