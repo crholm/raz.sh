@@ -8,7 +8,7 @@
     <h1>Index</h1>
    <ul class="index">
     {{ range .}}
-            <li><span style="width: 10ch; display: inline-block">{{format_time .PublishDate "2006-01-02"}}</span> <a href="/blog/{{.Slug}}">{{.Title}}</a></li>
+            <li><span style="width: 10ch; display: inline-block">{{format_time .PublishDate "2006-01-02"}}</span> <a href="/blog/{{.Slug}}" style="display: inline-block; border: none">{{.Title}}</a></li>
     {{end}}
    </ul>
 {{end}}
