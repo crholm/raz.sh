@@ -26,6 +26,15 @@ p {
        legibility. */
     font-family: "Lexend", Verdana, Arial, sans-serif;
 
+    /* Increase the font size to make reading less straining. 
+       On smaller screens, such as mobile devices, 0.9rem provides 
+       a smaller font size in needed to fit any amount of text on
+       each line . */
+    font-size: 1.2rem;
+    @media (max-width: 480px) {
+        font-size: 0.9rem;
+    }
+
     /* Increase letter spacing (tracking) to prevent letters
        from appearing too crowded, which can improve 
        readability for some users. 0.1ch provides a noticeable 
@@ -53,6 +62,8 @@ p {
        This can help prevent text from stretching too far and 
        making it difficult to track lines. */
     max-width: 75ch;
+
+
 }
 ```
 
@@ -251,3 +262,12 @@ p {
 }
 ```
 
+## Sources
+
+Some interesting resources on the topic addressing readability in general
+and for people with dyslexia:
+
+- [Lexend](https://lexend.com)
+- [A Study of the Readability of On-Screen Text, Eric Michael Weisenmiller](https://vtechworks.lib.vt.edu/server/api/core/bitstreams/d2aff585-f8a5-4152-b9c8-a177f84a3979/content)
+- [The impact of font type on reading, Stephanie Hoffmeister, Eastern Michigan University 2016](https://commons.emich.edu/cgi/viewcontent.cgi?article=1507&context=honors)
+- [Contrast and font affect reading speeds of adolescents with and without a need for language- based learning support, Heiner Böttger, Julia Dose and Tanja Müller](https://rudn.tlcjournal.org/archive/1(4)/1(4)-03.pdf)

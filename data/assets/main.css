@@ -72,7 +72,13 @@ body {
     line-height: 1.6em;
     letter-spacing: 0.1ch;
     word-spacing: 0.2ch;
+
+    /*Fonts just become too big on mobile*/
+    @media (max-width: 480px) {
+        font-size: 0.9rem;
+    }
 }
+
 
 
 body.dark {
@@ -89,6 +95,7 @@ body.dark {
     .social img {
         filter: invert(75%);
     }
+
 
     blockquote {
         background-color: var(--bg-0);
@@ -122,6 +129,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 2px var(--border-color) solid;
     box-shadow: var(--shadow-z1);
     background: var(--bg-0);
+    line-height: 1.1em;
 }
 
 h1 {
@@ -171,8 +179,9 @@ h5:before {
 
 .title {
     color: var(--green);
-    font-size: 3rem;
+    font-size: 3em;
     font-weight: var(--weight-bold);
+    line-height: 1.0em;
 }
 
 .title a {
@@ -227,7 +236,7 @@ blockquote {
 
 
 ul.index {
-    font-size: 1.5rem;
+    font-size: 1.5em;
 
     li {
         padding: 0.4rem 0
@@ -305,7 +314,7 @@ a:hover {
 }
 
 code {
-    font-size: 1.1rem;
+    font-size: 0.9em;
     background-color: var(--bg-0);
     padding: 4px;
     border: 1px solid black;
@@ -368,20 +377,21 @@ nav {
     padding: 1rem;
     margin: 2rem 0;
     border: 2px black solid;
-}
-
-nav > ul:before {
-    content: "TOC";
-    font-weight: bold;
-    font-size: 3rem;
+    font-size: 1.2em;
 }
 
 nav > ul > li > ul > li > ul {
     display: none;
 }
 
+nav > ul > li > ul {
+    margin:0;
+}
+
 nav > ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 
