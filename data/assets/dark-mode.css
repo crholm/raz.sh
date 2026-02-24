@@ -6,7 +6,6 @@
     width: calc(64px  + var(--switch-height) -  34px);
     height: var(--switch-height);
     box-shadow: var(--shadow-z1);
-    /*scale: 0.8;*/
     border: 2px solid var(--fg-3);
 }
 

@@ -270,4 +270,4 @@ and for people with dyslexia:
 - [Lexend](https://lexend.com)
 - [A Study of the Readability of On-Screen Text, Eric Michael Weisenmiller](https://vtechworks.lib.vt.edu/server/api/core/bitstreams/d2aff585-f8a5-4152-b9c8-a177f84a3979/content)
 - [The impact of font type on reading, Stephanie Hoffmeister, Eastern Michigan University 2016](https://commons.emich.edu/cgi/viewcontent.cgi?article=1507&context=honors)
-- [Contrast and font affect reading speeds of adolescents with and without a need for language- based learning support, Heiner Böttger, Julia Dose and Tanja Müller](https://rudn.tlcjournal.org/archive/1(4)/1(4)-03.pdf)
+- [Contrast and font affect reading speeds of adolescents with and without a need for language- based learning support, Heiner Böttger, Julia Dose and Tanja Müller](https://rudn.tlcjournal.org/archive/1\(4\)/1\(4\)-03.pdf)
