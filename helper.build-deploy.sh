@@ -3,28 +3,16 @@
 set -e
 
 host="raz.sh"
+image="razsh:$(date +%Y-%m-%d_%H.%M)-$(git rev-parse --short HEAD)"
 
-GOOS=linux GOARCH=amd64 go build razsh.go
+echo "Building Docker image ${image}..."
+docker build -t "${image}" -t "razsh:latest" .
 
+echo "Transferring image to ${host}..."
+docker save "${image}" "razsh:latest" | ssh root@${host} docker load
 
-echo "Uploading new binary and templates to ${host}..."
-# Replace the old binary with the new one
-scp ./razsh root@${host}:/root/razsh_new
-scp -r ./data/assets ./data/tmpl  root@${host}:/root/data
+echo "Restarting service on ${host}..."
+ssh root@${host} "cd /root && IMAGE=${image} docker compose up -d --no-deps razsh"
 
-
-# Replacing service on remote host
-
-echo "Stopping service on ${host}..."
-ssh root@${host} systemctl stop razsh.service
-
-echo "Replacing binary on ${host}..."
-ssh root@${host} mv /root/razsh_new /root/razsh
-
-echo "Starting service on ${host}..."
-ssh root@${host} systemctl start razsh.service
-
-# Check the status of the service
- ssh root@${host} systemctl status razsh.service
-
-
+echo "Checking container status on ${host}..."
+ssh root@${host} "docker compose -f /root/docker-compose.yml ps razsh"

@@ -2,3 +2,10 @@
 razsh
 data/dkim
 dev.sh
+.vale-styles
+
+# Air live reload
+tmp/
+
+# Docker
+.env

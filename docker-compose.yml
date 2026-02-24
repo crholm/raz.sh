@@ -1,0 +1,19 @@
+services:
+  # Development service with live reload using Air
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: razsh-dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - go-mod-cache:/go/pkg/mod
+    environment:
+      - DATA_DIR=/app/data
+    command: ["air", "-c", ".air.toml"]
+    working_dir: /app
+
+volumes:
+  go-mod-cache:

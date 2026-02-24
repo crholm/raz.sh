@@ -142,12 +142,13 @@ func serveDir(dir string) http.HandlerFunc {
 		file := chi.URLParam(r, "*")
 
 		f, err := os.OpenInRoot(dir, file)
-		defer f.Close()
 
 		if err != nil {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
+		defer f.Close()
+
 		http.ServeContent(w, r, file, time.Now(), f)
 	}
 }
@@ -201,28 +202,30 @@ func renderFeed(dir string, _type string) http.HandlerFunc {
 		switch _type {
 		case "json":
 			w.Header().Set("Content-Type", "application/json")
-			feed.WriteJSON(w)
+			if err := feed.WriteJSON(w); err != nil {
+				log.Printf("Error writing JSON feed: %v", err)
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			}
 		case "atom":
 			w.Header().Set("Content-Type", "application/atom+xml")
-			feed.WriteAtom(w)
+			if err := feed.WriteAtom(w); err != nil {
+				log.Printf("Error writing Atom feed: %v", err)
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			}
 		default:
 			w.Header().Set("Content-Type", "application/rss+xml")
-			feed.WriteRss(w)
+			if err := feed.WriteRss(w); err != nil {
+				log.Printf("Error writing RSS feed: %v", err)
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			}
 		}
 	}
 }
 
 func renderEntry(dir string) http.HandlerFunc {
-
-	t, err := tmpl.BaseTemplate()
+	t, err := loadPageTemplate(tmpl.PAGE_ENTRY)
 	if err != nil {
-		log.Printf("Error loading base template: %v", err)
-		panic(fmt.Errorf("error loading base template: %v", err))
-	}
-	t, err = tmpl.AddPage(t, tmpl.PAGE_ENTRY)
-	if err != nil {
-		log.Printf("Error loading entry template: %v", err)
-		panic(fmt.Errorf("error loading entry template: %v", err))
+		panic(err)
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -254,7 +257,7 @@ func renderEntry(dir string) http.HandlerFunc {
 
 		if err := t.Lookup(tmpl.PAGE_ENTRY).Execute(w, Page{
 			Info:  getInfo(r),
-			Title: header.Title + "- Raz Blog",
+			Title: header.Title + " - Raz Blog",
 			Content: BlogEntry{
 				FileHeader: header,
 				Body:       template.HTML(htmlBody),
@@ -266,17 +269,22 @@ func renderEntry(dir string) http.HandlerFunc {
 	}
 }
 
-func renderIndex(dir string) http.HandlerFunc {
-
+func loadPageTemplate(page string) (*template.Template, error) {
 	t, err := tmpl.BaseTemplate()
 	if err != nil {
-		log.Printf("Error loading base template: %v", err)
-		panic(fmt.Errorf("error loading base template: %v", err))
+		return nil, fmt.Errorf("error loading base template: %w", err)
 	}
-	t, err = tmpl.AddPage(t, tmpl.PAGE_INDEX)
+	t, err = tmpl.AddPage(t, page)
 	if err != nil {
-		log.Printf("Error loading index template: %v", err)
-		panic(fmt.Errorf("error loading index template: %v", err))
+		return nil, fmt.Errorf("error loading page template %s: %w", page, err)
+	}
+	return t, nil
+}
+
+func renderIndex(dir string) http.HandlerFunc {
+	t, err := loadPageTemplate(tmpl.PAGE_INDEX)
+	if err != nil {
+		panic(err)
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {

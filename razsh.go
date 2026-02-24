@@ -3,19 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/urfave/cli/v2"
 	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
-	"raz.sh/internal/clix"
-	"raz.sh/internal/web"
 	"syscall"
 	"time"
+
+	"github.com/modfin/clix"
+	"github.com/urfave/cli/v3"
+
+	"raz.sh/internal/web"
 )
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Name:  "razsh",
 		Usage: "a blog service",
 		Commands: []*cli.Command{
@@ -25,8 +27,8 @@ func main() {
 					&cli.BoolFlag{Name: "tls"},
 					&cli.StringFlag{Name: "data-dir", Value: "./data"},
 					&cli.StringSliceFlag{Name: "hostname"},
-					&cli.StringFlag{Name: "http-interface", Value: ":80"},
-					&cli.StringFlag{Name: "https-interface", Value: ":443"},
+					&cli.StringFlag{Name: "http-interface", Value: ":8080"},
+					&cli.StringFlag{Name: "https-interface", Value: ":8443"},
 					&cli.StringFlag{Name: "ga"},
 				},
 				Action: serve,
@@ -34,13 +36,13 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func serve(c *cli.Context) error {
-	dataDir := c.String("data-dir")
+func serve(ctx context.Context, cmd *cli.Command) error {
+	dataDir := cmd.String("data-dir")
 	dirs := []string{"tmpl", "blog", "acme", "assets"}
 	for _, dir := range dirs {
 		if err := os.MkdirAll(filepath.Join(dataDir, dir), 0755); err != nil {
@@ -48,7 +50,7 @@ func serve(c *cli.Context) error {
 		}
 	}
 
-	cfg := clix.Parse[Config](c)
+	cfg := clix.ParseCommand[Config](cmd)
 	s := web.New(cfg.Web)
 	err := s.Start()
 	if err != nil {
@@ -59,7 +61,6 @@ func serve(c *cli.Context) error {
 	signal.Notify(sigc,
 		syscall.SIGHUP,
 		syscall.SIGINT,
-		syscall.SIGKILL,
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 
