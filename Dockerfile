@@ -27,9 +27,6 @@ WORKDIR /app
 # Copy binary from builder
 COPY --from=builder /app/razsh .
 
-# Copy data directory (for static assets)
-COPY --from=builder /app/data ./data
-
 # Expose ports
 EXPOSE 8080
 

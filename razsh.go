@@ -24,12 +24,12 @@ func main() {
 			{
 				Name: "serve",
 				Flags: []cli.Flag{
-					&cli.BoolFlag{Name: "tls"},
-					&cli.StringFlag{Name: "data-dir", Value: "./data"},
-					&cli.StringSliceFlag{Name: "hostname"},
-					&cli.StringFlag{Name: "http-interface", Value: ":8080"},
-					&cli.StringFlag{Name: "https-interface", Value: ":8443"},
-					&cli.StringFlag{Name: "ga"},
+					&cli.BoolFlag{Name: "tls", Sources: cli.EnvVars("RAZSH_TLS")},
+					&cli.StringFlag{Name: "data-dir", Value: "./data", Sources: cli.EnvVars("RAZSH_DATA_DIR")},
+					&cli.StringSliceFlag{Name: "hostname", Sources: cli.EnvVars("RAZSH_HOSTNAME")},
+					&cli.StringFlag{Name: "http-interface", Value: ":8080", Sources: cli.EnvVars("RAZSH_HTTP_INTERFACE")},
+					&cli.StringFlag{Name: "https-interface", Value: ":8443", Sources: cli.EnvVars("RAZSH_HTTPS_INTERFACE")},
+					&cli.StringFlag{Name: "ga", Sources: cli.EnvVars("RAZSH_GA")},
 				},
 				Action: serve,
 			},

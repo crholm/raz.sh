@@ -5,6 +5,18 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"html/template"
+	"io"
+	"io/fs"
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/feeds"
@@ -14,16 +26,8 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 	"golang.org/x/net/html"
 	"gopkg.in/yaml.v3"
-	"html/template"
-	"log"
-	"net/http"
-	"os"
-	"path/filepath"
+	datafs "raz.sh/data"
 	"raz.sh/internal/web/tmpl"
-	"sort"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type Server struct {
@@ -53,6 +57,10 @@ func (s *Server) Stop(ctx context.Context) error {
 	return nil
 }
 func (s *Server) Start() error {
+	assetsFS, err := fs.Sub(datafs.FS, "assets")
+	if err != nil {
+		return fmt.Errorf("embedded assets fs: %w", err)
+	}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -63,8 +71,8 @@ func (s *Server) Start() error {
 	r.Get("/blog.json", renderFeed(s.cfg.DataDir, "json"))
 	r.Get("/blog/{entry}", renderEntry(s.cfg.DataDir))
 
+	r.Get("/assets/*", serveEmbeddedDir(assetsFS))
 	r.Get("/blog/media/*", serveDir(filepath.Join(s.cfg.DataDir, "blog", "media")))
-	r.Get("/assets/*", serveDir(filepath.Join(s.cfg.DataDir, "assets")))
 
 	if !s.cfg.UseTLS {
 		return s.startHTTPServer(r)
@@ -135,6 +143,27 @@ func (s *Server) startHTTPSServer(handler http.Handler) error {
 	}()
 
 	return nil
+}
+
+func serveEmbeddedDir(dir fs.FS) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		file := chi.URLParam(r, "*")
+
+		f, err := dir.Open(file)
+		if err != nil {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+		defer f.Close()
+
+		content, err := io.ReadAll(f)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		http.ServeContent(w, r, file, time.Time{}, bytes.NewReader(content))
+	}
 }
 
 func serveDir(dir string) http.HandlerFunc {
@@ -222,6 +251,7 @@ func renderFeed(dir string, _type string) http.HandlerFunc {
 		}
 	}
 }
+
 // extractTOC parses HTML and extracts the table of contents.
 // It looks for a <nav> element or a <ul> directly at the start of the document.
 // Returns the TOC HTML and the remaining body HTML separately.
@@ -232,7 +262,7 @@ func extractTOC(htmlContent []byte) (toc []byte, body []byte, err error) {
 	}
 
 	var tocNode *html.Node
-	
+
 	// First try to find a <nav> element
 	var findNav func(*html.Node) *html.Node
 	findNav = func(n *html.Node) *html.Node {
@@ -278,25 +308,6 @@ func extractTOC(htmlContent []byte) (toc []byte, body []byte, err error) {
 		// No TOC found, return body only
 		return []byte(""), htmlContent, nil
 	}
-
-	// Limit TOC depth to H3: remove H4+ nested lists (depth >= 2)
-	var limitDepth func(*html.Node, int)
-	limitDepth = func(n *html.Node, depth int) {
-		if n.Type == html.ElementNode && n.Data == "ul" {
-			if depth >= 2 {
-				if n.Parent != nil {
-					n.Parent.RemoveChild(n)
-				}
-				return
-			}
-		}
-		for c := n.FirstChild; c != nil; {
-			next := c.NextSibling
-			limitDepth(c, depth+1)
-			c = next
-		}
-	}
-	limitDepth(tocNode, 0)
 
 	// Wrap TOC in nav if it isn't already
 	var tocHTML []byte
