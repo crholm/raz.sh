@@ -51,6 +51,7 @@
     --fg-1: var(--theme-500);
     --fg-2: var(--theme-600);
     --fg-3: var(--theme-700);
+    --fg-4: var(--theme-800);
 
     --monospace: "Google Sans Code", sans-serif;
 }
@@ -113,7 +114,7 @@ body.dark {
 
 body {
     background-color: var(--bg-1);
-    color: var(--fg-3);
+    color: var(--fg-4);
     margin: 0;
     padding: 0;
 
@@ -217,7 +218,7 @@ h5:before {
 p {
     margin: 2rem 0 0;
     padding: 0;
-    color: black;
+    color: var(--fg-3);
 }
 
 blockquote {
