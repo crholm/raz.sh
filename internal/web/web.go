@@ -12,6 +12,7 @@ import (
 	"github.com/modfin/henry/slicez"
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/crypto/acme/autocert"
+	"golang.org/x/net/html"
 	"gopkg.in/yaml.v3"
 	"html/template"
 	"log"
@@ -221,7 +222,137 @@ func renderFeed(dir string, _type string) http.HandlerFunc {
 		}
 	}
 }
+// extractTOC parses HTML and extracts the table of contents.
+// It looks for a <nav> element or a <ul> directly at the start of the document.
+// Returns the TOC HTML and the remaining body HTML separately.
+func extractTOC(htmlContent []byte) (toc []byte, body []byte, err error) {
+	doc, err := html.Parse(bytes.NewReader(htmlContent))
+	if err != nil {
+		return nil, nil, err
+	}
 
+	var tocNode *html.Node
+	
+	// First try to find a <nav> element
+	var findNav func(*html.Node) *html.Node
+	findNav = func(n *html.Node) *html.Node {
+		if n.Type == html.ElementNode && n.Data == "nav" {
+			return n
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			if found := findNav(c); found != nil {
+				return found
+			}
+		}
+		return nil
+	}
+	tocNode = findNav(doc)
+
+	// If no nav found, look for the first <ul> directly in body
+	if tocNode == nil {
+		var bodyNode *html.Node
+		var findBody func(*html.Node) *html.Node
+		findBody = func(n *html.Node) *html.Node {
+			if n.Type == html.ElementNode && n.Data == "body" {
+				return n
+			}
+			for c := n.FirstChild; c != nil; c = c.NextSibling {
+				if found := findBody(c); found != nil {
+					return found
+				}
+			}
+			return nil
+		}
+		bodyNode = findBody(doc)
+		if bodyNode != nil && bodyNode.FirstChild != nil {
+			for c := bodyNode.FirstChild; c != nil; c = c.NextSibling {
+				if c.Type == html.ElementNode && c.Data == "ul" {
+					tocNode = c
+					break
+				}
+			}
+		}
+	}
+
+	if tocNode == nil {
+		// No TOC found, return body only
+		return []byte(""), htmlContent, nil
+	}
+
+	// Limit TOC depth to H3: remove H4+ nested lists (depth >= 2)
+	var limitDepth func(*html.Node, int)
+	limitDepth = func(n *html.Node, depth int) {
+		if n.Type == html.ElementNode && n.Data == "ul" {
+			if depth >= 2 {
+				if n.Parent != nil {
+					n.Parent.RemoveChild(n)
+				}
+				return
+			}
+		}
+		for c := n.FirstChild; c != nil; {
+			next := c.NextSibling
+			limitDepth(c, depth+1)
+			c = next
+		}
+	}
+	limitDepth(tocNode, 0)
+
+	// Wrap TOC in nav if it isn't already
+	var tocHTML []byte
+	if tocNode.Data == "nav" {
+		var tocBuf bytes.Buffer
+		if err := html.Render(&tocBuf, tocNode); err != nil {
+			return nil, nil, err
+		}
+		tocHTML = tocBuf.Bytes()
+	} else {
+		// Wrap the ul in a nav
+		tocHTML = append([]byte("<nav>"), tocHTML...)
+		var tocBuf bytes.Buffer
+		if err := html.Render(&tocBuf, tocNode); err != nil {
+			return nil, nil, err
+		}
+		tocHTML = append(tocHTML, tocBuf.Bytes()...)
+		tocHTML = append(tocHTML, []byte("</nav>")...)
+	}
+
+	// Remove TOC from doc
+	if tocNode.Parent != nil {
+		tocNode.Parent.RemoveChild(tocNode)
+	}
+
+	// Extract body HTML (everything in body)
+	var bodyBuf bytes.Buffer
+	var bodyNode *html.Node
+	var findBody func(*html.Node) *html.Node
+	findBody = func(n *html.Node) *html.Node {
+		if n.Type == html.ElementNode && n.Data == "body" {
+			return n
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			if found := findBody(c); found != nil {
+				return found
+			}
+		}
+		return nil
+	}
+	bodyNode = findBody(doc)
+	if bodyNode != nil {
+		for c := bodyNode.FirstChild; c != nil; c = c.NextSibling {
+			if err := html.Render(&bodyBuf, c); err != nil {
+				return nil, nil, err
+			}
+		}
+	} else {
+		// Fallback: render whole doc
+		if err := html.Render(&bodyBuf, doc); err != nil {
+			return nil, nil, err
+		}
+	}
+
+	return tocHTML, bodyBuf.Bytes(), nil
+}
 func renderEntry(dir string) http.HandlerFunc {
 	t, err := loadPageTemplate(tmpl.PAGE_ENTRY)
 	if err != nil {
@@ -255,12 +386,22 @@ func renderEntry(dir string) http.HandlerFunc {
 		p := bluemonday.UGCPolicy().AllowElements("nav").AddTargetBlankToFullyQualifiedLinks(true)
 		htmlBody = p.SanitizeBytes(htmlBody)
 
+		// Extract TOC and body
+		tocHTML, bodyHTML, err := extractTOC(htmlBody)
+		if err != nil {
+			log.Printf("Error extracting TOC: %v", err)
+			// Fallback: use original HTML as body, empty TOC
+			tocHTML = []byte("")
+			bodyHTML = htmlBody
+		}
+
 		if err := t.Lookup(tmpl.PAGE_ENTRY).Execute(w, Page{
 			Info:  getInfo(r),
 			Title: header.Title + " - Raz Blog",
 			Content: BlogEntry{
 				FileHeader: header,
-				Body:       template.HTML(htmlBody),
+				Body:       template.HTML(bodyHTML),
+				TOC:        template.HTML(tocHTML),
 			},
 		}); err != nil {
 			log.Printf("Error rendering entry template: %v", err)

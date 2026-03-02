@@ -1,19 +1,38 @@
 {{template "_main.html.tmpl" .}}
+
+{{define "header-extra"}}
+{{if .TOC}}
+<button class="toc-toggle" id="toc-toggle" aria-label="Open table of contents">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+{{end}}
+{{end}}
+
+{{define "sidebar"}}
+{{if .TOC}}
+<aside class="toc-sidebar" id="toc-sidebar">
+    <div class="toc-header">
+        <span>Content</span>
+        <button class="toc-close" id="toc-close" aria-label="Close">&times;</button>
+    </div>
+    {{.TOC}}
+</aside>
+{{end}}
+{{end}}
+
 {{define "content"}}
 
+{{if .FileHeader.Image}}
+    <div class="cover-image" style="background-image: url({{.FileHeader.Image}})"></div>
+{{end}}
 
+<small><em>Rasmus Holm  -  {{format_time .FileHeader.PublishDate "Mon, 02 Jan 2006"}}</em></small>
+<h1>{{.Title}}</h1>
 
-
-
-   {{if .FileHeader.Image}}
-       <div class="cover-image" style="background-image: url({{.FileHeader.Image}})"></div>
-   {{end}}
-
-   <small><em>Rasmus Holm  -  {{format_time .FileHeader.PublishDate "Mon, 02 Jan 2006"}}</em></small>
-    <h1>{{.Title}}</h1>
-
-
-    {{.Body}}
-
+{{.Body}}
 
 {{end}}

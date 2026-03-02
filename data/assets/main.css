@@ -1,6 +1,9 @@
 @import "dark-mode.css";
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..800;1,300..800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap");
+
+/*@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap");*/
 
 :root {
     --solarized-base03: #002b36;
@@ -9,8 +12,8 @@
     --solarized-base00: #657b83;
     --solarized-base0: #839496;
     --solarized-base1: #c6bda3;
-    --solarized-base2: #eee8d5;
-    --solarized-base3: #fdf6e3;
+    --solarized-base2: #f0eee6;
+    --solarized-base3: #fffaed;
 
     --solarized-yellow: #b58900;
     --solarized-orange: #cb4b16;
@@ -61,19 +64,25 @@ body {
 
     /*content width of main element on site*/
     /*--content-width: 60rem;*/
-    --content-width: 75ch;
+    --content-width: 70ch;
 
     /*font-family: "Lexend", sans-serif;*/
     font-family: "Montserrat", sans-serif;
+    /*font-family: "Google Sans", sans-serif;*/
     font-weight: var(--weight-normal);
-    font-size: 1.2rem;
-    line-height: 1.6em;
-    letter-spacing: 0.1ch;
+    font-size: 1.1rem;
+    line-height: 2rem;
+    letter-spacing: 0.05ch;
     word-spacing: 0.2ch;
 
     /*Fonts just become too big on mobile*/
     @media (max-width: 480px) {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        p,
+        blockquote {
+            margin-left: 0;
+            margin-right: 0;
+        }
     }
 }
 
@@ -104,7 +113,7 @@ body.dark {
 
 body {
     background-color: var(--bg-1);
-    color: var(--fg-2);
+    color: var(--fg-3);
     margin: 0;
     padding: 0;
 
@@ -193,7 +202,7 @@ h5:before {
     justify-content: space-between;
     align-items: center;
     max-width: var(--content-width);
-    margin: 0.2rem auto 0;
+    margin: 1rem auto 0;
     padding: 20px;
     border: 3px black solid;
     box-shadow: var(--shadow-z2);
@@ -205,19 +214,10 @@ h5:before {
     }
 }
 
-.settings {
-    position: relative;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    /*height: 2rem;*/
-    padding: 0.2rem 0.4rem;
-}
-
 p {
     margin: 2rem 0 0;
     padding: 0;
-    color: var(--fg-3);
+    color: black;
 }
 
 blockquote {
@@ -410,4 +410,158 @@ pre {
     margin-bottom: 1rem;
     border: 2px var(--border-color) solid;
     box-shadow: var(--shadow-z1);
+}
+
+/* ── TOC Sidebar ─────────────────────────────────────────────────────────── */
+
+/*
+ * Desktop: fixed on the right edge, sized by content (not full viewport height).
+ * Only shown when there is a TOC (the element is rendered by the entry template).
+ * Mobile (<=900px): hidden by default, slides in as a drawer via JS.
+ */
+.toc-sidebar {
+    position: fixed;
+    top: 1rem;
+    right: 0;
+    width: 240px;
+    height: auto;
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+    background: var(--bg-1);
+    border: 2px solid var(--border-color);
+    box-shadow: var(--shadow-z1);
+    padding: 20px;
+    z-index: 200;
+}
+
+.toc-sidebar nav {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.82em;
+    line-height: 1.5;
+}
+
+.toc-sidebar nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.toc-sidebar nav ul ul {
+    padding-left: 0.8rem;
+}
+
+/* H4+ hidden */
+.toc-sidebar nav ul ul ul {
+    display: none;
+}
+
+.toc-sidebar nav a {
+    display: block;
+    padding: 0.2rem 0.4rem;
+    border-bottom: none;
+    color: var(--fg-1);
+    word-break: break-word;
+}
+
+.toc-sidebar nav a:hover {
+    background: var(--bg-1);
+    color: var(--fg-3);
+}
+
+.toc-sidebar nav a.toc-active {
+    color: var(--green);
+    font-weight: var(--weight-bold);
+    border-left: 3px solid var(--green);
+    padding-left: calc(0.4rem - 3px);
+}
+
+/* Label at top of sidebar */
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: var(--weight-bold);
+    font-size: 0.8em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+}
+
+/* Close button — only shown on mobile */
+.toc-close {
+    display: none;
+    background: var(--bg-0);
+    border: 2px solid var(--border-color);
+    font-size: 1.3rem;
+    line-height: 1;
+    padding: 0.1rem 0.4rem;
+    cursor: pointer;
+    color: var(--fg-3);
+}
+.toc-close:hover {
+    background: var(--red);
+    color: var(--bg-0);
+}
+
+/* Hamburger — hidden on desktop */
+.toc-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--fg-3);
+    padding: 0;
+    margin-left: 1rem;
+    line-height: 0;
+}
+.toc-toggle:hover {
+    color: var(--green);
+}
+
+/* Hide the inline nav blackfriday injects at the top of the body */
+.content > nav {
+    display: none;
+}
+
+/* ── Mobile (<=900px): drawer ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .toc-sidebar {
+        height: 100vh;
+        max-height: 100vh;
+        right: -110%;
+        border-left: 2px solid var(--border-color);
+        border-right: none;
+        transition: right 0.25s ease;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .toc-sidebar.toc-open {
+        right: 0;
+    }
+
+    .toc-close {
+        display: block;
+    }
+
+    .toc-toggle {
+        display: flex;
+        align-items: center;
+    }
+
+    .toc-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 199;
+    }
+    .toc-overlay.toc-open {
+        display: block;
+    }
 }

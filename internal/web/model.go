@@ -20,7 +20,9 @@ type FileHeader struct {
 	PublishDate time.Time `yaml:"publish_date"`
 	Public      bool      `yaml:"public"`
 }
+
 type BlogEntry struct {
 	FileHeader
 	Body template.HTML
+	TOC  template.HTML
 }
